@@ -469,8 +469,10 @@ def get_project():
 def update_project():
     data = request.get_json(silent=True) or {}
     with project_lock:
-        if 'name' in data:
-            current_project['name'] = data['name']
+        # Accept full project replacement or partial update
+        for key in DEFAULT_PROJECT:
+            if key in data:
+                current_project[key] = data[key]
     save_project_to_disk()
     return jsonify({"success": True}), 200
 
@@ -775,6 +777,36 @@ def control_enable():
     add_event("System enabled", "INFO")
     return jsonify({"success": True, "message": "Enabled"}), 200
 
+@app.route('/api/control/disconnect', methods=['POST'])
+def control_disconnect():
+    """Disconnect from MotoPick system"""
+    add_event("Disconnected from system", "INFO")
+    return jsonify({"success": True, "message": "Disconnected"}), 200
+
+@app.route('/api/control/stop', methods=['POST'])
+def control_stop():
+    """Stop the MotoPick system"""
+    add_event("System stopped", "WARNING")
+    return jsonify({"success": True, "message": "System stopped"}), 200
+
+@app.route('/api/control/transmit', methods=['POST'])
+def control_transmit():
+    """Transmit project to controller"""
+    add_event("Project transmitted to controller", "INFO")
+    return jsonify({"success": True, "message": "Transmitted"}), 200
+
+@app.route('/api/control/status', methods=['GET'])
+def control_status():
+    """Get controller status"""
+    sim_mode = grpc_client is None or not grpc_client.is_connected
+    return jsonify({
+        "success": True,
+        "connected": not sim_mode,
+        "running": False,
+        "format_loaded": None,
+        "simulation": sim_mode
+    }), 200
+
 # --- EVENTS ---
 
 @app.route('/api/events', methods=['GET'])
@@ -902,7 +934,15 @@ def write_variable():
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    html_path = os.path.join(app_dir, 'templates', 'index.html')
+    try:
+        with open(html_path, 'r', encoding='utf-8') as fh:
+            content = fh.read()
+    except UnicodeDecodeError:
+        with open(html_path, 'r', encoding='latin-1') as fh:
+            content = fh.read()
+    from flask import Response
+    return Response(content, mimetype='text/html')
 
 # ==================== MAIN ====================
 
