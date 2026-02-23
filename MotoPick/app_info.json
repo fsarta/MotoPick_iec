@@ -1,0 +1,18 @@
+{
+  "plcnextapp": {
+    "name": "MotoPick",
+    "identifier": "20000000000005",
+    "version": "1.0.0",
+    "target": "iC9226M-EC,iC9226M-FSoE",
+    "minfirmware_version": "25.0.0",
+    "manufacturer": "Yaskawa Italia Srl - F. Sarta",
+    "licensetype": "Free"
+  },
+  "linuxdaemons": [
+    {
+      "path": "start.sh",
+      "cmdargs": "",
+      "starttime": "99"
+    }
+  ]
+}

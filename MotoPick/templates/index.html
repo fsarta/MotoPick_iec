@@ -1,0 +1,2887 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MotoPick_iCube</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Roboto+Mono:wght@400;500&display=swap');
+
+:root {
+  --sidebar-bg: #1e2428;
+  --sidebar-hover: #2d3640;
+  --sidebar-active: #0078d4;
+  --sidebar-text: #c8d0d8;
+  --sidebar-icon: #8a9bb0;
+  --topbar-bg: #0078d4;
+  --topbar-text: #ffffff;
+  --tab-active-bg: #ffffff;
+  --tab-active-text: #0078d4;
+  --tab-inactive: rgba(255,255,255,0.15);
+  --statusbar-bg: #f0f0f0;
+  --statusbar-border: #d0d0d0;
+  --content-bg: #ffffff;
+  --content-border: #dde1e6;
+  --panel-bg: #f8f9fa;
+  --right-panel-bg: #f3f4f6;
+  --right-panel-border: #dde1e6;
+  --right-item-hover: #e8edf2;
+  --right-item-active: #0078d4;
+  --field-bg: #ffffff;
+  --field-border: #c0c8d2;
+  --field-focus: #0078d4;
+  --section-title: #444;
+  --section-border: #dde1e6;
+  --text-primary: #1a1a2e;
+  --text-secondary: #666;
+  --text-muted: #999;
+  --blue: #0078d4;
+  --blue-light: #e8f4fd;
+  --green: #107c10;
+  --green-light: #e9f5e9;
+  --red: #d13438;
+  --red-light: #fde8e9;
+  --yellow: #f0b429;
+  --yellow-light: #fef8e7;
+  --shadow: 0 1px 4px rgba(0,0,0,0.12);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 13px;
+  background: #e8edf2;
+  color: var(--text-primary);
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ===== TOPBAR ===== */
+.topbar {
+  background: var(--topbar-bg);
+  height: 42px;
+  display: flex;
+  align-items: stretch;
+  flex-shrink: 0;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+  z-index: 100;
+}
+
+.topbar-file {
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  color: white;
+  font-weight: 500;
+  font-size: 14px;
+  cursor: pointer;
+  border-right: 1px solid rgba(255,255,255,0.2);
+  position: relative;
+  user-select: none;
+}
+.topbar-file:hover { background: rgba(255,255,255,0.1); }
+
+.topbar-home {
+  display: flex;
+  align-items: center;
+  padding: 0 14px;
+  color: white;
+  cursor: pointer;
+  font-size: 18px;
+  border-right: 1px solid rgba(255,255,255,0.2);
+}
+.topbar-home:hover { background: rgba(255,255,255,0.1); }
+
+.topbar-tabs {
+  display: flex;
+  align-items: stretch;
+  flex: 1;
+  padding: 0 8px;
+  gap: 2px;
+  align-items: center;
+}
+
+.tab-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 18px;
+  border: none;
+  background: var(--tab-inactive);
+  color: rgba(255,255,255,0.85);
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  border-radius: 4px 4px 0 0;
+  font-family: 'Roboto', sans-serif;
+  transition: background 0.15s;
+  height: 32px;
+}
+.tab-btn:hover { background: rgba(255,255,255,0.25); }
+.tab-btn.active {
+  background: var(--tab-active-bg);
+  color: var(--tab-active-text);
+  border-radius: 4px 4px 0 0;
+}
+
+.topbar-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 16px;
+  margin-left: auto;
+}
+
+.conn-badge {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 600;
+  background: rgba(255,255,255,0.15);
+  color: white;
+}
+.conn-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: #888;
+}
+.conn-dot.ok { background: #6fcf97; box-shadow: 0 0 6px #6fcf97; }
+.conn-dot.sim { background: #f0b429; }
+.conn-dot.err { background: #eb5757; }
+
+/* ===== STATUS BAR ===== */
+.statusbar {
+  background: var(--statusbar-bg);
+  border-bottom: 1px solid var(--statusbar-border);
+  height: 28px;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  font-size: 12px;
+}
+
+.statusbar-item {
+  display: flex;
+  align-items: center;
+  padding: 0 14px;
+  height: 100%;
+  border-right: 1px solid var(--statusbar-border);
+  gap: 8px;
+  color: var(--text-secondary);
+  min-width: 0;
+}
+.statusbar-item .label { color: var(--text-muted); font-size: 11px; }
+.statusbar-item .value { font-weight: 500; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.statusbar-item.issues .value { color: var(--green); }
+.statusbar-item.issues.has-errors .value { color: var(--red); }
+.statusbar-item.issues.has-warnings .value { color: var(--yellow); }
+.statusbar-item:last-child { border-right: none; margin-left: auto; }
+
+/* ===== MAIN LAYOUT ===== */
+.main-layout {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+/* ===== LEFT SIDEBAR ===== */
+.sidebar {
+  width: 64px;
+  background: var(--sidebar-bg);
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  z-index: 10;
+}
+
+.sidebar-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 4px;
+  cursor: pointer;
+  color: var(--sidebar-text);
+  gap: 5px;
+  min-height: 64px;
+  border-left: 3px solid transparent;
+  transition: all 0.15s;
+  text-align: center;
+}
+.sidebar-item:hover { background: var(--sidebar-hover); }
+.sidebar-item.active {
+  background: rgba(0,120,212,0.2);
+  border-left-color: var(--sidebar-active);
+  color: white;
+}
+.sidebar-item .sidebar-icon {
+  font-size: 20px;
+  line-height: 1;
+}
+.sidebar-item .sidebar-label {
+  font-size: 9px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  line-height: 1.2;
+  color: var(--sidebar-icon);
+}
+.sidebar-item.active .sidebar-label { color: rgba(255,255,255,0.9); }
+
+/* ===== CONTENT AREA ===== */
+.content-wrapper {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+}
+
+.content-main {
+  flex: 1;
+  background: var(--content-bg);
+  overflow: auto;
+  position: relative;
+}
+
+/* ===== RIGHT PANEL ===== */
+.right-panel {
+  width: 180px;
+  background: var(--right-panel-bg);
+  border-left: 1px solid var(--right-panel-border);
+  overflow-y: auto;
+  flex-shrink: 0;
+}
+
+.right-panel-item {
+  padding: 10px 12px;
+  cursor: pointer;
+  border-bottom: 1px solid var(--right-panel-border);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-primary);
+  transition: background 0.1s;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.right-panel-item:hover { background: var(--right-item-hover); }
+.right-panel-item.active {
+  background: var(--right-item-active);
+  color: white;
+}
+.right-panel-item.disabled { color: var(--text-muted); font-style: italic; }
+
+/* ===== SECTION HEADERS ===== */
+.section {
+  padding: 16px;
+  border-bottom: 1px solid var(--section-border);
+}
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--section-border);
+}
+.section-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--section-title);
+}
+.section-help {
+  width: 16px; height: 16px;
+  border-radius: 50%;
+  background: var(--blue);
+  color: white;
+  font-size: 10px;
+  font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  cursor: help;
+  flex-shrink: 0;
+}
+
+/* ===== FORM ELEMENTS ===== */
+.form-row {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 10px;
+  align-items: flex-end;
+  flex-wrap: wrap;
+}
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  flex: 1;
+  min-width: 80px;
+}
+.form-field.fixed { flex: 0 0 auto; }
+.form-label {
+  font-size: 10px;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+.form-input {
+  height: 28px;
+  padding: 0 8px;
+  border: 1px solid var(--field-border);
+  border-radius: 3px;
+  background: var(--field-bg);
+  color: var(--text-primary);
+  font-size: 12px;
+  font-family: 'Roboto Mono', monospace;
+  width: 100%;
+  transition: border-color 0.15s;
+}
+.form-input:focus {
+  outline: none;
+  border-color: var(--field-focus);
+  box-shadow: 0 0 0 2px rgba(0,120,212,0.15);
+}
+.form-input[readonly] {
+  background: var(--panel-bg);
+  color: var(--text-secondary);
+  border-color: var(--content-border);
+}
+.form-input.text-right { text-align: right; }
+
+.form-select {
+  height: 28px;
+  padding: 0 4px;
+  border: 1px solid var(--field-border);
+  border-radius: 3px;
+  background: var(--field-bg);
+  color: var(--text-primary);
+  font-size: 12px;
+  font-family: 'Roboto', sans-serif;
+  width: 100%;
+}
+.form-select:focus { outline: none; border-color: var(--field-focus); }
+
+.form-check {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  user-select: none;
+}
+.form-check input[type=checkbox] {
+  width: 15px; height: 15px;
+  accent-color: var(--blue);
+  cursor: pointer;
+}
+.form-check input[type=radio] {
+  width: 15px; height: 15px;
+  accent-color: var(--blue);
+  cursor: pointer;
+}
+
+/* ===== PROPERTIES BAR ===== */
+.properties-bar {
+  background: var(--panel-bg);
+  border-bottom: 1px solid var(--section-border);
+  padding: 8px 16px;
+  display: flex;
+  gap: 12px;
+  align-items: flex-end;
+  flex-wrap: wrap;
+}
+.prop-field { display: flex; flex-direction: column; gap: 2px; }
+.prop-label { font-size: 10px; color: var(--text-muted); }
+.prop-input {
+  height: 24px;
+  width: 90px;
+  padding: 0 6px;
+  border: 1px solid var(--field-border);
+  border-radius: 3px;
+  font-size: 12px;
+  font-family: 'Roboto Mono', monospace;
+  text-align: right;
+  background: white;
+}
+.prop-input:focus { outline: none; border-color: var(--blue); }
+.prop-input.name { width: 130px; text-align: left; }
+
+/* ===== SVG CANVAS ===== */
+.canvas-container {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  background: white;
+  cursor: default;
+}
+.canvas-svg {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+}
+
+/* SVG Component styles */
+.mp-component {
+  cursor: move;
+  user-select: none;
+}
+.mp-component.selected .mp-outline {
+  stroke: var(--blue);
+  stroke-width: 2;
+  stroke-dasharray: none;
+}
+.mp-component .mp-outline {
+  fill: none;
+  stroke: #aab5c0;
+  stroke-width: 1;
+}
+.mp-component text {
+  font-family: 'Roboto', sans-serif;
+  font-size: 11px;
+  fill: #444;
+  pointer-events: none;
+}
+
+/* ===== LAYOUT VIEW ===== */
+.layout-view {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+/* ===== TABLES ===== */
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.data-table th {
+  background: var(--panel-bg);
+  padding: 7px 10px;
+  text-align: left;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  border-bottom: 1px solid var(--section-border);
+  white-space: nowrap;
+}
+.data-table td {
+  padding: 6px 10px;
+  border-bottom: 1px solid var(--content-border);
+  font-size: 12px;
+  vertical-align: middle;
+}
+.data-table tr:hover td { background: var(--blue-light); }
+
+/* ===== BUTTONS ===== */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 12px;
+  border: 1px solid transparent;
+  border-radius: 3px;
+  font-size: 12px;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+.btn:active { transform: translateY(1px); }
+.btn-primary { background: var(--blue); color: white; border-color: var(--blue); }
+.btn-primary:hover { background: #106ebe; }
+.btn-secondary { background: white; color: var(--text-primary); border-color: var(--field-border); }
+.btn-secondary:hover { background: var(--panel-bg); }
+.btn-success { background: var(--green); color: white; border-color: var(--green); }
+.btn-success:hover { background: #0b6a0b; }
+.btn-danger { background: var(--red); color: white; border-color: var(--red); }
+.btn-danger:hover { background: #a4262c; }
+.btn-sm { padding: 3px 8px; font-size: 11px; }
+.btn-lg { padding: 8px 20px; font-size: 13px; height: 36px; }
+.btn:disabled { opacity: 0.45; cursor: not-allowed; }
+
+/* ===== GRIDS ===== */
+.rule-grid {
+  display: grid;
+  grid-template-columns: repeat(16, 1fr);
+  gap: 4px;
+  margin-bottom: 8px;
+}
+.rule-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--field-border);
+  border-radius: 3px;
+  padding: 4px 2px;
+  cursor: pointer;
+  font-size: 10px;
+  font-weight: 500;
+  transition: all 0.1s;
+  user-select: none;
+}
+.rule-cell:hover { background: var(--blue-light); }
+.rule-cell.checked { background: var(--blue); color: white; border-color: var(--blue); }
+
+/* ===== TYPE BADGES ===== */
+.type-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px; height: 22px;
+  border-radius: 3px;
+  font-size: 9px;
+  font-weight: 700;
+  color: white;
+  cursor: pointer;
+}
+
+/* ===== TCP TABLE ===== */
+.tcp-row {
+  display: grid;
+  grid-template-columns: 60px 90px 90px repeat(8, 1fr);
+  gap: 4px;
+  align-items: center;
+  padding: 4px 0;
+  border-bottom: 1px solid var(--content-border);
+  font-size: 11px;
+}
+.tcp-header {
+  font-weight: 600;
+  color: var(--text-secondary);
+  font-size: 10px;
+  padding-bottom: 4px;
+}
+
+/* ===== KPI CARDS ===== */
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px;
+  padding: 16px;
+}
+.kpi-card {
+  background: var(--panel-bg);
+  border: 1px solid var(--section-border);
+  border-radius: 6px;
+  padding: 12px 16px;
+  border-left: 4px solid var(--blue);
+}
+.kpi-card.green { border-left-color: var(--green); }
+.kpi-card.red { border-left-color: var(--red); }
+.kpi-card.yellow { border-left-color: var(--yellow); }
+.kpi-label { font-size: 11px; color: var(--text-secondary); margin-bottom: 4px; }
+.kpi-value { font-size: 22px; font-weight: 700; color: var(--text-primary); font-family: 'Roboto Mono', monospace; }
+.kpi-unit { font-size: 11px; color: var(--text-muted); margin-left: 4px; }
+
+/* ===== EVENT LOG ===== */
+.event-log {
+  font-family: 'Roboto Mono', monospace;
+  font-size: 11px;
+  line-height: 1.6;
+  padding: 8px 12px;
+  background: #1a1a2e;
+  color: #a8b4c0;
+  height: 200px;
+  overflow-y: auto;
+  border-radius: 4px;
+}
+.event-INFO { color: #a8b4c0; }
+.event-WARNING { color: #f0b429; }
+.event-ERROR { color: #eb5757; }
+.event-time { color: #4a5568; margin-right: 6px; }
+
+/* ===== COCKPIT ===== */
+.cockpit-layout {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 0;
+  height: 100%;
+}
+.cockpit-controls {
+  border-right: 1px solid var(--section-border);
+  padding: 16px;
+  overflow-y: auto;
+}
+.cockpit-log {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  overflow: hidden;
+}
+
+/* ===== DROPDOWN ===== */
+.dropdown {
+  position: absolute;
+  background: white;
+  border: 1px solid var(--field-border);
+  border-radius: 4px;
+  box-shadow: var(--shadow);
+  z-index: 1000;
+  min-width: 150px;
+  overflow: hidden;
+}
+.dropdown-item {
+  padding: 8px 14px;
+  cursor: pointer;
+  font-size: 12px;
+  transition: background 0.1s;
+}
+.dropdown-item:hover { background: var(--blue-light); }
+.dropdown-separator { height: 1px; background: var(--content-border); margin: 4px 0; }
+
+/* ===== ROBOT STATUS ===== */
+.robot-status-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 10px;
+  padding: 16px;
+}
+.robot-card {
+  background: var(--panel-bg);
+  border: 1px solid var(--section-border);
+  border-radius: 6px;
+  overflow: hidden;
+}
+.robot-card-header {
+  background: var(--sidebar-bg);
+  color: white;
+  padding: 8px 10px;
+  font-size: 12px;
+  font-weight: 600;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.robot-card-body {
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.robot-stat {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+}
+.robot-stat .lbl { color: var(--text-secondary); }
+.robot-stat .val { font-family: 'Roboto Mono', monospace; font-weight: 600; }
+
+/* ===== STATUS INDICATORS ===== */
+.status-led {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: #888;
+  display: inline-block;
+  flex-shrink: 0;
+}
+.status-led.green { background: #6fcf97; box-shadow: 0 0 5px #6fcf97; }
+.status-led.red { background: #eb5757; box-shadow: 0 0 5px #eb5757; }
+.status-led.yellow { background: #f0b429; box-shadow: 0 0 5px #f0b429; animation: blink 1s infinite; }
+@keyframes blink { 0%,100% { opacity:1; } 50% { opacity:0.3; } }
+
+/* ===== CONVEYORS IN LAYOUT ===== */
+.conveyor-belt {
+  fill: #e8edf2;
+  stroke: #8a9bb0;
+  stroke-width: 1;
+}
+.conveyor-roller { fill: #aab5c0; }
+.robot-shape { fill: #dce6f0; stroke: #0078d4; stroke-width: 1.5; }
+.camera-shape { fill: #fff8e1; stroke: #f0b429; stroke-width: 1.5; }
+.pattern-shape { fill: #e1f0ff; stroke: #0078d4; stroke-width: 1.5; }
+
+/* ===== SCROLLBAR ===== */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--panel-bg); }
+::-webkit-scrollbar-thumb { background: #bcc5cc; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #9aa5af; }
+
+/* ===== UTIL ===== */
+.hidden { display: none !important; }
+.flex { display: flex; }
+.flex-1 { flex: 1; }
+.flex-col { flex-direction: column; }
+.gap-8 { gap: 8px; }
+.gap-12 { gap: 12px; }
+.items-center { align-items: center; }
+.justify-between { justify-content: space-between; }
+.mt-8 { margin-top: 8px; }
+.mb-8 { margin-bottom: 8px; }
+.mt-12 { margin-top: 12px; }
+.p-12 { padding: 12px; }
+.text-sm { font-size: 11px; }
+.text-muted { color: var(--text-muted); }
+.font-mono { font-family: 'Roboto Mono', monospace; }
+
+/* ===== ANIMATIONS ===== */
+.panel { animation: panelIn 0.15s ease; }
+@keyframes panelIn {
+  from { opacity: 0; transform: translateX(4px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+/* NEW ITEM BUTTON */
+.new-item-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  margin: 4px;
+  border: 1px dashed var(--field-border);
+  border-radius: 3px;
+  cursor: pointer;
+  color: var(--blue);
+  font-size: 12px;
+  font-weight: 500;
+  transition: all 0.15s;
+  background: transparent;
+  width: calc(100% - 8px);
+  justify-content: center;
+}
+.new-item-btn:hover { background: var(--blue-light); border-color: var(--blue); }
+
+/* TOOLTIP */
+[title] { cursor: help; }
+</style>
+</head>
+<body>
+
+<!-- ===== TOPBAR ===== -->
+<div class="topbar">
+  <div class="topbar-file" onclick="toggleFileMenu()" id="fileMenuBtn">
+    File ▾
+    <div class="dropdown hidden" id="fileDropdown" style="top:42px;left:0;">
+      <div class="dropdown-item" onclick="newProject()">📄 New Project</div>
+      <div class="dropdown-item" onclick="saveProject()">💾 Save Project</div>
+      <div class="dropdown-separator"></div>
+      <div class="dropdown-item" onclick="showHelp()">❓ Help</div>
+    </div>
+  </div>
+  <div class="topbar-home" onclick="navigateTo('cockpit')" title="Home / Cockpit">🏠</div>
+  <div class="topbar-tabs">
+    <button class="tab-btn" id="tab-project" onclick="setTab('project')">
+      📁 Project
+    </button>
+    <button class="tab-btn" id="tab-format" onclick="setTab('format')">
+      ⚙ Format
+    </button>
+    <button class="tab-btn" id="tab-control" onclick="setTab('control')">
+      👤 Control
+    </button>
+  </div>
+  <div class="topbar-status">
+    <div class="conn-badge">
+      <div class="conn-dot" id="connDot"></div>
+      <span id="connText">Connecting...</span>
+    </div>
+  </div>
+</div>
+
+<!-- ===== STATUS BAR ===== -->
+<div class="statusbar">
+  <div class="statusbar-item issues" id="issuesItem">
+    <span class="label">Current Issues</span>
+    <span class="value" id="issuesText">No Errors, No Warnings</span>
+  </div>
+  <div class="statusbar-item">
+    <span class="label">Project Name</span>
+    <span class="value" id="projectNameText">Loading...</span>
+  </div>
+  <div class="statusbar-item">
+    <span class="label">Format</span>
+    <span class="value" id="currentFormatText">—</span>
+  </div>
+  <div class="statusbar-item">
+    <span class="value" id="currentRuleText">—</span>
+  </div>
+</div>
+
+<!-- ===== MAIN LAYOUT ===== -->
+<div class="main-layout">
+
+  <!-- LEFT SIDEBAR -->
+  <div class="sidebar" id="sidebar"></div>
+
+  <!-- CONTENT + RIGHT PANEL -->
+  <div class="content-wrapper">
+    <div class="content-main" id="contentMain"></div>
+    <div class="right-panel" id="rightPanel"></div>
+  </div>
+
+</div>
+
+<script>
+// ===================================================================
+// STATE
+// ===================================================================
+const state = {
+  tab: 'project',
+  section: 'layout',
+  project: null,
+  selectedComponent: null,
+  selectedRobot: null,
+  selectedFeed: null,
+  selectedSupply: null,
+  selectedGripper: null,
+  selectedProduct: null,
+  selectedFormat: null,
+  selectedRule: null,
+  selectedPattern: null,
+  connected: false,
+  simulation: true,
+  liveInterval: null,
+  canvasTransform: { x: 0, y: 0, scale: 1 },
+  isDragging: false,
+  dragTarget: null,
+  dragOffset: { x: 0, y: 0 },
+  isPanning: false,
+  panStart: { x: 0, y: 0 }
+};
+
+// ===================================================================
+// SIDEBAR DEFINITIONS
+// ===================================================================
+const SIDEBARS = {
+  project: [
+    { id: 'layout',   icon: '🗺', label: 'Layout' },
+    { id: 'grippers', icon: '✊', label: 'Grippers' },
+    { id: 'robots',   icon: '🤖', label: 'Robots' },
+    { id: 'feeds',    icon: '📡', label: 'Feeds' },
+    { id: 'supplies', icon: '👁', label: 'Supplies' },
+    { id: 'products', icon: '📦', label: 'Products' },
+    { id: 'formats',  icon: '🔧', label: 'Formats' },
+  ],
+  format: [
+    { id: 'multi_pick',     icon: '⬆⬆', label: 'Multi Pick' },
+    { id: 'multi_place',    icon: '⬇⬇', label: 'Multi Place' },
+    { id: 'grip_rules',     icon: '§', label: 'Grip Rules' },
+    { id: 'work_areas',     icon: '⬜', label: 'Work Areas' },
+    { id: 'load_share',     icon: '⚖', label: 'Load Share' },
+    { id: 'pick_patterns',  icon: '⊞', label: 'Pick Patterns' },
+    { id: 'place_patterns', icon: '⊡', label: 'Place Patterns' },
+    { id: 'item_sources',   icon: '📤', label: 'Item Sources' },
+    { id: 'item_order',     icon: '🔄', label: 'Item Order' },
+    { id: 'robot_motion',   icon: '⚙', label: 'Robot Motion' },
+  ],
+  control: [
+    { id: 'cockpit',      icon: '🎛', label: 'Cockpit' },
+    { id: 'adjust_motion',icon: '↕', label: 'Adjust Motion' },
+  ]
+};
+
+// ===================================================================
+// INIT
+// ===================================================================
+document.addEventListener('DOMContentLoaded', async () => {
+  await loadProject();
+  setTab('project');
+  startHealthCheck();
+  document.addEventListener('click', handleGlobalClick);
+});
+
+async function loadProject() {
+  try {
+    const res = await fetch('/api/project');
+    const data = await res.json();
+    if (data.success) {
+      state.project = data.project;
+      document.getElementById('projectNameText').textContent = state.project.name || 'Unnamed';
+    }
+  } catch (e) {
+    console.error('Load project error:', e);
+    state.project = { name: 'Offline', robots: [], feeds: [], supplies: [], grippers: [], products: [], formats: [], layout: { components: [] } };
+  }
+}
+
+async function saveProject() {
+  try {
+    await fetch('/api/project/save', { method: 'POST' });
+    showToast('Project saved', 'success');
+  } catch (e) {
+    showToast('Save failed', 'error');
+  }
+}
+
+function newProject() {
+  if (confirm('Create new project? Unsaved changes will be lost.')) {
+    location.reload();
+  }
+}
+
+// ===================================================================
+// TAB NAVIGATION
+// ===================================================================
+function setTab(tab) {
+  state.tab = tab;
+  ['project','format','control'].forEach(t => {
+    document.getElementById(`tab-${t}`).classList.toggle('active', t === tab);
+  });
+  const items = SIDEBARS[tab];
+  if (items && items.length > 0) {
+    const defaultSection = tab === 'control' ? 'cockpit' : items[0].id;
+    navigateTo(defaultSection);
+  }
+}
+
+function navigateTo(section) {
+  // Find which tab this section belongs to
+  for (const [tab, items] of Object.entries(SIDEBARS)) {
+    if (items.find(i => i.id === section)) {
+      if (state.tab !== tab) {
+        state.tab = tab;
+        ['project','format','control'].forEach(t => {
+          document.getElementById(`tab-${t}`).classList.toggle('active', t === tab);
+        });
+      }
+      break;
+    }
+  }
+
+  state.section = section;
+  renderSidebar();
+  renderContent();
+  renderRightPanel();
+}
+
+function renderSidebar() {
+  const sidebar = document.getElementById('sidebar');
+  const items = SIDEBARS[state.tab] || [];
+  sidebar.innerHTML = items.map(item => `
+    <div class="sidebar-item ${state.section === item.id ? 'active' : ''}"
+         onclick="navigateTo('${item.id}')"
+         title="${item.label}">
+      <span class="sidebar-icon">${item.icon}</span>
+      <span class="sidebar-label">${item.label}</span>
+    </div>
+  `).join('');
+}
+
+// ===================================================================
+// CONTENT ROUTER
+// ===================================================================
+function renderContent() {
+  const main = document.getElementById('contentMain');
+  main.innerHTML = '';
+  main.className = 'content-main panel';
+
+  const renderers = {
+    layout:         renderLayout,
+    grippers:       renderGrippers,
+    robots:         renderRobots,
+    feeds:          renderFeeds,
+    supplies:       renderSupplies,
+    products:       renderProducts,
+    formats:        renderFormats,
+    grip_rules:     renderGripRules,
+    work_areas:     renderWorkAreas,
+    load_share:     renderLoadShare,
+    pick_patterns:  renderPickPatterns,
+    place_patterns: renderPlacePatterns,
+    item_sources:   renderItemSources,
+    item_order:     renderItemOrder,
+    robot_motion:   renderRobotMotion,
+    multi_pick:     renderMultiPick,
+    multi_place:    renderMultiPlace,
+    cockpit:        renderCockpit,
+    adjust_motion:  renderAdjustMotion,
+  };
+
+  const fn = renderers[state.section];
+  if (fn) fn(main);
+  else main.innerHTML = `<div class="p-12 text-muted">Section "${state.section}" not implemented</div>`;
+}
+
+// ===================================================================
+// RIGHT PANEL ROUTER
+// ===================================================================
+function renderRightPanel() {
+  const panel = document.getElementById('rightPanel');
+  panel.innerHTML = '';
+
+  const p = state.project;
+  if (!p) return;
+
+  function makeItems(items, selected, onSelect, idFn, labelFn) {
+    return items.map((item, idx) => {
+      const id = idFn ? idFn(item) : idx;
+      const label = labelFn ? labelFn(item) : (item.name || item.label || `Item ${idx+1}`);
+      const isActive = selected === id;
+      return `<div class="right-panel-item ${isActive ? 'active' : ''} ${!label ? 'disabled' : ''}"
+                   onclick="${onSelect}(${JSON.stringify(id)})"
+                   title="${label || ''}">
+        ${label || '—'}
+      </div>`;
+    }).join('');
+  }
+
+  const configs = {
+    layout: () => {
+      panel.innerHTML = (p.layout?.components || []).map((c,i) => `
+        <div class="right-panel-item ${state.selectedComponent === c.id ? 'active' : ''}"
+             onclick="selectComponent('${c.id}')">${c.label || c.id}</div>
+      `).join('');
+    },
+    grippers: () => {
+      panel.innerHTML = (p.grippers || []).map(g => `
+        <div class="right-panel-item ${state.selectedGripper === g.id ? 'active' : ''}"
+             onclick="selectGripper(${g.id})">${g.name}</div>
+      `).join('') + `<div class="new-item-btn" onclick="addGripper()">+ Add</div>`;
+    },
+    robots: () => {
+      panel.innerHTML = (p.robots || []).map(r => `
+        <div class="right-panel-item ${state.selectedRobot === r.id ? 'active' : ''}"
+             onclick="selectRobot(${r.id})">${r.name}</div>
+      `).join('') + `<div class="new-item-btn" onclick="addRobot()">+ Add</div>`;
+    },
+    feeds: () => {
+      panel.innerHTML = (p.feeds || []).map(f => `
+        <div class="right-panel-item ${state.selectedFeed === f.id ? 'active' : ''}"
+             onclick="selectFeed(${f.id})">${f.name}</div>
+      `).join('') + `<div class="new-item-btn" onclick="addFeed()">+ Add</div>`;
+    },
+    supplies: () => {
+      panel.innerHTML = (p.supplies || []).map(s => `
+        <div class="right-panel-item ${state.selectedSupply === s.id ? 'active' : ''}"
+             onclick="selectSupply(${s.id})">${s.name}</div>
+      `).join('') + `<div class="new-item-btn" onclick="addSupply()">+ Add</div>`;
+    },
+    products: () => {
+      panel.innerHTML = (p.products || []).map((pr, i) => `
+        <div class="right-panel-item ${state.selectedProduct === pr.id ? 'active' : ''}"
+             onclick="selectProduct(${pr.id})">[Type ${String(i+1).padStart(2,'0')}] ${pr.name}</div>
+      `).join('');
+      for (let i = (p.products||[]).length + 1; i <= 50; i++) {
+        panel.innerHTML += `<div class="right-panel-item disabled">[Type ${String(i).padStart(2,'0')}] Unused Type</div>`;
+      }
+    },
+    formats: () => {
+      panel.innerHTML = '';
+    },
+    grip_rules: () => {
+      const rules = p.grip_rules || [];
+      panel.innerHTML = rules.slice(0,20).map((r,i) => `
+        <div class="right-panel-item ${state.selectedRule === r.id ? 'active' : ''}"
+             onclick="selectRule(${r.id})">Rule ${String(r.id).padStart(2,'0')}</div>
+      `).join('');
+    },
+    work_areas: () => {
+      panel.innerHTML = (p.robots || []).map(r => `
+        <div class="right-panel-item ${state.selectedRobot === r.id ? 'active' : ''}"
+             onclick="selectRobot(${r.id})">${r.name}</div>
+      `).join('');
+    },
+    load_share: () => {
+      panel.innerHTML = (p.feeds || []).map(f => `
+        <div class="right-panel-item ${state.selectedFeed === f.id ? 'active' : ''}"
+             onclick="selectFeed(${f.id})">${f.name}</div>
+      `).join('');
+    },
+    pick_patterns: () => {
+      panel.innerHTML = (p.pick_patterns || []).map(pp => `
+        <div class="right-panel-item ${state.selectedPattern === pp.id ? 'active' : ''}"
+             onclick="selectPattern('pick',${pp.id})">${pp.name}</div>
+      `).join('') + `<div class="new-item-btn" onclick="addPattern('pick')">+</div>`;
+    },
+    place_patterns: () => {
+      panel.innerHTML = (p.place_patterns || []).map(pp => `
+        <div class="right-panel-item ${state.selectedPattern === pp.id ? 'active' : ''}"
+             onclick="selectPattern('place',${pp.id})">${pp.name}</div>
+      `).join('') + `<div class="new-item-btn" onclick="addPattern('place')">+</div>`;
+    },
+    item_sources: () => { panel.innerHTML = ''; },
+    item_order: () => {
+      panel.innerHTML = (p.robots || []).map(r => `
+        <div class="right-panel-item">${r.name}</div>
+      `).join('');
+    },
+    robot_motion: () => {
+      const rm = p.robot_motion || [];
+      panel.innerHTML = '';
+      (p.feeds || []).forEach(f => {
+        panel.innerHTML += `<div class="right-panel-item ${state.selectedFeed===f.id?'active':''}"
+            onclick="selectFeed(${f.id})">[Feed ${String(f.id).padStart(2,'0')}] ${f.name}</div>`;
+      });
+      (p.robots || []).forEach(r => {
+        panel.innerHTML += `<div class="right-panel-item ${state.selectedRobot===r.id?'active':''}"
+            onclick="selectRobot(${r.id})">${r.name}</div>`;
+      });
+    },
+    cockpit: () => { panel.innerHTML = ''; },
+    adjust_motion: () => { panel.innerHTML = ''; },
+    multi_pick: () => {
+      panel.innerHTML = (p.robots || []).map(r => `<div class="right-panel-item">${r.name}</div>`).join('');
+    },
+    multi_place: () => {
+      panel.innerHTML = (p.robots || []).map(r => `<div class="right-panel-item">${r.name}</div>`).join('');
+    },
+  };
+
+  const fn = configs[state.section];
+  if (fn) fn();
+}
+
+// ===================================================================
+// SECTION SELECTORS
+// ===================================================================
+function selectComponent(id) { state.selectedComponent = id; renderRightPanel(); renderContent(); }
+function selectRobot(id)     { state.selectedRobot = id; renderRightPanel(); renderContent(); }
+function selectFeed(id)      { state.selectedFeed = id; renderRightPanel(); renderContent(); }
+function selectSupply(id)    { state.selectedSupply = id; renderRightPanel(); renderContent(); }
+function selectGripper(id)   { state.selectedGripper = id; renderRightPanel(); renderContent(); }
+function selectProduct(id)   { state.selectedProduct = id; renderRightPanel(); renderContent(); }
+function selectRule(id)      { state.selectedRule = id; renderRightPanel(); renderContent(); }
+function selectPattern(type, id) { state.selectedPattern = id; state.patternType = type; renderRightPanel(); renderContent(); }
+
+// ===================================================================
+// LAYOUT CANVAS
+// ===================================================================
+function renderLayout(container) {
+  const p = state.project;
+  const components = p?.layout?.components || [];
+
+  container.innerHTML = `
+    <div class="layout-view" style="height:100%">
+      <div class="properties-bar" id="propsBar">
+        <div class="prop-field"><div class="prop-label">Name</div>
+          <input class="prop-input name" id="propName" value="" onchange="updateComponentProp('label',this.value)">
+        </div>
+        <div class="prop-field"><div class="prop-label">X</div>
+          <input class="prop-input" id="propX" value="" type="number" onchange="updateComponentProp('x',+this.value)">
+        </div>
+        <div class="prop-field"><div class="prop-label">Y</div>
+          <input class="prop-input" id="propY" value="" type="number" onchange="updateComponentProp('y',+this.value)">
+        </div>
+        <div class="prop-field"><div class="prop-label">Width</div>
+          <input class="prop-input" id="propW" value="" type="number" onchange="updateComponentProp('width',+this.value)">
+        </div>
+        <div class="prop-field"><div class="prop-label">Height</div>
+          <input class="prop-input" id="propH" value="" type="number" onchange="updateComponentProp('height',+this.value)">
+        </div>
+        <div class="prop-field"><div class="prop-label">Angle</div>
+          <input class="prop-input" id="propAngle" value="" type="number" onchange="updateComponentProp('angle',+this.value)">
+        </div>
+      </div>
+      <div class="canvas-container" id="canvasContainer">
+        <svg class="canvas-svg" id="mainSvg" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
+              <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#e8edf2" stroke-width="0.5"/>
+            </pattern>
+          </defs>
+          <rect width="100%" height="100%" fill="url(#grid)"/>
+          <g id="canvasGroup"></g>
+        </svg>
+      </div>
+    </div>
+  `;
+
+  renderCanvasComponents();
+  initCanvasEvents();
+  updatePropertiesBar();
+}
+
+function renderCanvasComponents() {
+  const p = state.project;
+  const components = p?.layout?.components || [];
+  const group = document.getElementById('canvasGroup');
+  if (!group) return;
+
+  const { x, y, scale } = state.canvasTransform;
+  group.setAttribute('transform', `translate(${x},${y}) scale(${scale})`);
+
+  group.innerHTML = '';
+  components.forEach(comp => {
+    const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+    g.setAttribute('class', `mp-component ${state.selectedComponent === comp.id ? 'selected' : ''}`);
+    g.setAttribute('data-id', comp.id);
+    g.setAttribute('transform', `translate(${comp.x},${comp.y}) rotate(${comp.angle||0})`);
+
+    let inner = '';
+    if (comp.type === 'conveyor') {
+      const ctype = comp.conveyor_type || 'pick';
+      const fillColor = ctype === 'pick' ? '#e8f4fd' : '#e8f0fe';
+      const strokeColor = ctype === 'pick' ? '#0078d4' : '#5b4fcf';
+      inner = `
+        <rect class="mp-outline" x="0" y="0" width="${comp.width}" height="${comp.height}"
+              rx="4" fill="${fillColor}" stroke="${strokeColor}" stroke-width="1.5"/>
+        <text x="${comp.width/2}" y="-6" text-anchor="middle" font-size="11" fill="#555">${comp.label}</text>
+        <circle cx="15" cy="${comp.height/2}" r="8" fill="#aab5c0"/>
+        <circle cx="${comp.width-15}" cy="${comp.height/2}" r="8" fill="#aab5c0"/>
+        <line x1="23" y1="${comp.height/2}" x2="${comp.width-23}" y2="${comp.height/2}"
+              stroke="#c0c8d2" stroke-width="2" stroke-dasharray="8,4"/>
+      `;
+    } else if (comp.type === 'robot') {
+      const cx = comp.width/2, cy = comp.height/2;
+      inner = `
+        <polygon points="${cx},0 ${comp.width},${comp.height} 0,${comp.height}"
+                 fill="#dce6f0" stroke="#0078d4" stroke-width="1.5"/>
+        <circle cx="${cx}" cy="${comp.height/2+4}" r="5" fill="#0078d4"/>
+        <text x="${cx}" y="${comp.height+14}" text-anchor="middle" font-size="11" fill="#555">${comp.label}</text>
+      `;
+    } else if (comp.type === 'camera') {
+      inner = `
+        <rect x="0" y="0" width="${comp.width}" height="${comp.height}"
+              rx="8" fill="#fff8e1" stroke="#f0b429" stroke-width="1.5"/>
+        <circle cx="${comp.width/2}" cy="${comp.height/2}" r="14" fill="none" stroke="#f0b429" stroke-width="2"/>
+        <circle cx="${comp.width/2}" cy="${comp.height/2}" r="8" fill="#f0b429" opacity="0.5"/>
+        <text x="${comp.width/2}" y="${comp.height+14}" text-anchor="middle" font-size="11" fill="#555">${comp.label}</text>
+      `;
+    } else if (comp.type === 'pattern_host') {
+      inner = `
+        <rect x="0" y="0" width="${comp.width}" height="${comp.height}"
+              rx="4" fill="#e1f0ff" stroke="#0078d4" stroke-width="1.5"/>
+        <rect x="6" y="6" width="12" height="12" rx="2" fill="#0078d4" opacity="0.6"/>
+        <rect x="20" y="6" width="12" height="12" rx="2" fill="#0078d4" opacity="0.4"/>
+        <rect x="34" y="6" width="12" height="12" rx="2" fill="#0078d4" opacity="0.6"/>
+        <text x="${comp.width/2}" y="${comp.height+14}" text-anchor="middle" font-size="11" fill="#555">${comp.label}</text>
+      `;
+    }
+
+    // Selection handles
+    if (state.selectedComponent === comp.id) {
+      inner += `
+        <rect x="0" y="0" width="${comp.width}" height="${comp.height}"
+              fill="none" stroke="#0078d4" stroke-width="2" stroke-dasharray="4,2"/>
+        <rect x="-4" y="-4" width="8" height="8" fill="#0078d4" rx="1"/>
+        <rect x="${comp.width-4}" y="-4" width="8" height="8" fill="#0078d4" rx="1"/>
+        <rect x="-4" y="${comp.height-4}" width="8" height="8" fill="#0078d4" rx="1"/>
+        <rect x="${comp.width-4}" y="${comp.height-4}" width="8" height="8" fill="#0078d4" rx="1"/>
+      `;
+    }
+
+    g.innerHTML = inner;
+    group.appendChild(g);
+
+    // Events
+    g.addEventListener('mousedown', onComponentMouseDown);
+    g.addEventListener('click', (e) => { e.stopPropagation(); selectComponent(comp.id); renderContent(); });
+  });
+}
+
+function initCanvasEvents() {
+  const svg = document.getElementById('mainSvg');
+  const container = document.getElementById('canvasContainer');
+  if (!svg || !container) return;
+
+  // Zoom with mouse wheel
+  container.addEventListener('wheel', (e) => {
+    e.preventDefault();
+    const rect = container.getBoundingClientRect();
+    const mx = e.clientX - rect.left;
+    const my = e.clientY - rect.top;
+    const delta = e.deltaY > 0 ? 0.9 : 1.1;
+    const newScale = Math.min(5, Math.max(0.1, state.canvasTransform.scale * delta));
+
+    state.canvasTransform.x = mx - (mx - state.canvasTransform.x) * (newScale / state.canvasTransform.scale);
+    state.canvasTransform.y = my - (my - state.canvasTransform.y) * (newScale / state.canvasTransform.scale);
+    state.canvasTransform.scale = newScale;
+    renderCanvasComponents();
+  }, { passive: false });
+
+  // Pan with middle mouse or when not on component
+  svg.addEventListener('mousedown', (e) => {
+    if (e.target === svg || e.target.tagName === 'rect' && !e.target.closest('.mp-component')) {
+      if (e.button === 1 || e.button === 0) {
+        state.isPanning = true;
+        state.panStart = { x: e.clientX - state.canvasTransform.x, y: e.clientY - state.canvasTransform.y };
+        svg.style.cursor = 'grabbing';
+        e.preventDefault();
+      }
+    }
+  });
+
+  window.addEventListener('mousemove', (e) => {
+    if (state.isPanning) {
+      state.canvasTransform.x = e.clientX - state.panStart.x;
+      state.canvasTransform.y = e.clientY - state.panStart.y;
+      renderCanvasComponents();
+    }
+    if (state.isDragging && state.dragTarget) {
+      const rect = container.getBoundingClientRect();
+      const scale = state.canvasTransform.scale;
+      const newX = (e.clientX - rect.left - state.canvasTransform.x) / scale - state.dragOffset.x;
+      const newY = (e.clientY - rect.top - state.canvasTransform.y) / scale - state.dragOffset.y;
+
+      const comp = state.project.layout.components.find(c => c.id === state.dragTarget);
+      if (comp) {
+        comp.x = Math.round(newX);
+        comp.y = Math.round(newY);
+        renderCanvasComponents();
+        updatePropertiesBar();
+      }
+    }
+  });
+
+  window.addEventListener('mouseup', (e) => {
+    if (state.isPanning) {
+      state.isPanning = false;
+      if (svg) svg.style.cursor = 'default';
+    }
+    if (state.isDragging) {
+      state.isDragging = false;
+      state.dragTarget = null;
+      saveLayoutToServer();
+    }
+  });
+
+  // Click on empty space = deselect
+  svg.addEventListener('click', (e) => {
+    if (e.target === svg || e.target.tagName === 'rect' && !e.target.closest('.mp-component')) {
+      state.selectedComponent = null;
+      renderRightPanel();
+      renderCanvasComponents();
+      updatePropertiesBar();
+    }
+  });
+}
+
+function onComponentMouseDown(e) {
+  if (e.button !== 0) return;
+  e.stopPropagation();
+  e.preventDefault();
+
+  const g = e.currentTarget;
+  const compId = g.getAttribute('data-id');
+  const comp = state.project.layout.components.find(c => c.id === compId);
+  if (!comp) return;
+
+  const container = document.getElementById('canvasContainer');
+  const rect = container.getBoundingClientRect();
+  const scale = state.canvasTransform.scale;
+
+  const mouseX = (e.clientX - rect.left - state.canvasTransform.x) / scale;
+  const mouseY = (e.clientY - rect.top - state.canvasTransform.y) / scale;
+
+  state.isDragging = true;
+  state.dragTarget = compId;
+  state.dragOffset = { x: mouseX - comp.x, y: mouseY - comp.y };
+
+  selectComponent(compId);
+}
+
+function updateComponentProp(prop, value) {
+  if (!state.selectedComponent) return;
+  const comp = state.project.layout.components.find(c => c.id === state.selectedComponent);
+  if (comp) {
+    comp[prop] = value;
+    renderCanvasComponents();
+    saveLayoutToServer();
+  }
+}
+
+function updatePropertiesBar() {
+  const comp = state.project?.layout?.components?.find(c => c.id === state.selectedComponent);
+  const setVal = (id, val) => { const el = document.getElementById(id); if (el) el.value = val ?? ''; };
+  setVal('propName', comp?.label || '');
+  setVal('propX', comp?.x || 0);
+  setVal('propY', comp?.y || 0);
+  setVal('propW', comp?.width || 0);
+  setVal('propH', comp?.height || 0);
+  setVal('propAngle', comp?.angle || 0);
+}
+
+async function saveLayoutToServer() {
+  try {
+    await fetch('/api/layout', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ layout: state.project.layout })
+    });
+  } catch (e) { /* silent */ }
+}
+
+// ===================================================================
+// GRIPPERS
+// ===================================================================
+function renderGrippers(container) {
+  const p = state.project;
+  const grippers = p?.grippers || [];
+  const g = grippers.find(gr => gr.id === state.selectedGripper) || grippers[0];
+  if (!g && grippers.length === 0) {
+    container.innerHTML = `<div class="p-12 text-muted">No grippers configured. Add one from the right panel.</div>`;
+    return;
+  }
+  if (!g) { state.selectedGripper = grippers[0]?.id; }
+  const gripper = g || grippers[0];
+  if (!state.selectedGripper) state.selectedGripper = gripper?.id;
+
+  container.innerHTML = `
+    <div class="section">
+      <div class="section-header">
+        <div class="section-help">?</div>
+        <div class="section-title">Gripper Settings</div>
+      </div>
+      <div class="form-row">
+        <div class="form-field">
+          <div class="form-label">Gripper Name</div>
+          <input class="form-input text-right" style="max-width:300px" value="${gripper?.name||''}"
+                 onchange="updateGripperField('name',this.value)">
+        </div>
+        <div class="form-field" style="flex:0">
+          <div class="form-label">Verify Picking by Sensor</div>
+          <label class="form-check" style="margin-top:6px">
+            <input type="checkbox" ${gripper?.verify_picking?'checked':''} onchange="updateGripperField('verify_picking',this.checked)">
+          </label>
+        </div>
+        <div class="form-field" style="flex:0">
+          <div class="form-label">Verify Placing by Sensor</div>
+          <label class="form-check" style="margin-top:6px">
+            <input type="checkbox" ${gripper?.verify_placing?'checked':''} onchange="updateGripperField('verify_placing',this.checked)">
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-header">
+        <div class="section-help">?</div>
+        <div class="section-title">TCP Definitions</div>
+      </div>
+      <div style="overflow-x:auto">
+        <div style="min-width:800px">
+          <div class="tcp-row tcp-header">
+            <div>TCP</div>
+            <div>Mode</div>
+            <div>Group</div>
+            <div>Tool 1</div><div>Tool 2</div><div>Tool 3</div><div>Tool 4</div>
+            <div>Tool 5</div><div>Tool 6</div><div>Tool 7</div><div>Tool 8</div>
+          </div>
+          ${(gripper?.tcps || []).map(tcp => `
+            <div class="tcp-row">
+              <div style="font-weight:600">TCP ${String(tcp.id).padStart(2,'0')}</div>
+              <div>
+                <label class="form-check"><input type="radio" name="tcp${tcp.id}" ${tcp.mode==='Unused'?'checked':''} value="Unused"> Unused</label>
+                <label class="form-check"><input type="radio" name="tcp${tcp.id}" ${tcp.mode==='Tool'?'checked':''} value="Tool"> Tool</label>
+              </div>
+              <div><label class="form-check"><input type="checkbox" ${tcp.group?'checked':''}></label></div>
+              ${(tcp.tools||[false,false,false,false,false,false,false,false]).map((t,i) =>
+                `<div><label class="form-check"><input type="checkbox" ${t?'checked':''}></label></div>`
+              ).join('')}
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function updateGripperField(field, value) {
+  const p = state.project;
+  const g = p.grippers.find(gr => gr.id === state.selectedGripper);
+  if (g) { g[field] = value; }
+}
+
+function addGripper() {
+  const p = state.project;
+  const id = (p.grippers||[]).length + 1;
+  p.grippers = p.grippers || [];
+  p.grippers.push({
+    id, name: `Gripper ${id}`,
+    verify_picking: false, verify_placing: false,
+    tcps: Array.from({length:16}, (_,i) => ({id:i+1, mode:'Unused', group:false, tools:[false,false,false,false,false,false,false,false]}))
+  });
+  state.selectedGripper = id;
+  renderRightPanel(); renderContent();
+}
+
+// ===================================================================
+// ROBOTS
+// ===================================================================
+function renderRobots(container) {
+  const p = state.project;
+  const robots = p?.robots || [];
+  const robot = robots.find(r => r.id === state.selectedRobot) || robots[0];
+  if (!robot) {
+    container.innerHTML = `<div class="p-12 text-muted">No robots configured.</div>`;
+    return;
+  }
+  if (!state.selectedRobot) state.selectedRobot = robot.id;
+
+  const grippers = (p.grippers||[]).map(g => g.name);
+  const allFeeds = (p.feeds||[]).map(f => f.name);
+  const allSupplies = (p.supplies||[]).map(s => s.name);
+
+  const feedOptions = ['', ...allFeeds].map(f => `<option ${f===''?'':'value="'+f+'"'} ${false?'selected':''}>${f||'—'}</option>`).join('');
+  const supplyOptions = ['', ...allSupplies].map(s => `<option ${s===''?'':'value="'+s+'"'} ${false?'selected':''}>${s||'—'}</option>`).join('');
+
+  container.innerHTML = `
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:0;height:100%">
+      <div style="border-right:1px solid var(--section-border);overflow-y:auto">
+        <div class="section">
+          <div class="section-header">
+            <div class="section-help">?</div>
+            <div class="section-title">Robot Settings</div>
+          </div>
+          <div class="form-row">
+            <div class="form-field">
+              <div class="form-label">Name</div>
+              <input class="form-input text-right" value="${robot.name||''}" onchange="updateRobotField('name',this.value)">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-field">
+              <div class="form-label">IP Address</div>
+              <input class="form-input text-right" value="${robot.ip||''}" onchange="updateRobotField('ip',this.value)">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-field">
+              <div class="form-label">Gripper</div>
+              <select class="form-select" onchange="updateRobotField('gripper',this.value)">
+                ${grippers.map(g => `<option ${g===robot.gripper?'selected':''}>${g}</option>`).join('')}
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-header">
+            <div class="section-help">?</div>
+            <div class="section-title">Controller Generation</div>
+          </div>
+          ${['FS100','YRC1000 Micro','YRC1000'].map(ctrl => `
+            <label class="form-check" style="margin-bottom:8px">
+              <input type="radio" name="ctrl_${robot.id}" value="${ctrl}" ${robot.controller===ctrl?'checked':''} onchange="updateRobotField('controller','${ctrl}')">
+              ${ctrl}
+            </label>
+          `).join('')}
+        </div>
+      </div>
+
+      <div style="overflow-y:auto">
+        <div class="section">
+          <div class="section-header">
+            <div class="section-help">?</div>
+            <div class="section-title">Feeds</div>
+          </div>
+          ${Array.from({length:16}, (_,i) => `
+            <div class="form-row" style="margin-bottom:4px">
+              <div class="form-field" style="flex:0;min-width:80px">
+                <div class="form-label">Feed Slot ${String(i+1).padStart(2,'0')}</div>
+              </div>
+              <div class="form-field">
+                <select class="form-select">
+                  ${feedOptions}
+                </select>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+
+        <div class="section">
+          <div class="section-header">
+            <div class="section-help">?</div>
+            <div class="section-title">Supplies</div>
+          </div>
+          ${Array.from({length:16}, (_,i) => `
+            <div class="form-row" style="margin-bottom:4px">
+              <div class="form-field" style="flex:0;min-width:80px">
+                <div class="form-label">Supply Slot ${String(i+1).padStart(2,'0')}</div>
+              </div>
+              <div class="form-field">
+                <select class="form-select">
+                  ${supplyOptions}
+                </select>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function updateRobotField(field, value) {
+  const p = state.project;
+  const r = p.robots.find(r => r.id === state.selectedRobot);
+  if (r) r[field] = value;
+}
+
+function addRobot() {
+  const p = state.project;
+  const id = (p.robots||[]).length + 1;
+  p.robots = p.robots || [];
+  p.robots.push({
+    id, name: `Robot ${String(id).padStart(2,'0')}`, ip: '',
+    gripper: (p.grippers||[])[0]?.name || '', controller: 'FS100',
+    feeds: new Array(16).fill(''), supplies: new Array(16).fill(''),
+    enabled: true
+  });
+  state.selectedRobot = id;
+  renderRightPanel(); renderContent();
+}
+
+// ===================================================================
+// FEEDS
+// ===================================================================
+function renderFeeds(container) {
+  const p = state.project;
+  const feeds = p?.feeds || [];
+  const feed = feeds.find(f => f.id === state.selectedFeed) || feeds[0];
+  if (!feed) {
+    container.innerHTML = `<div class="p-12 text-muted">No feeds configured.</div>`;
+    return;
+  }
+  if (!state.selectedFeed) state.selectedFeed = feed.id;
+
+  const allSupplies = (p.supplies||[]).map(s => s.name);
+  const robots = p.robots || [];
+
+  container.innerHTML = `
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:0;height:100%;overflow-y:auto">
+      <div style="border-right:1px solid var(--section-border)">
+        <div class="section">
+          <div class="section-header"><div class="section-help">?</div><div class="section-title">Feed Settings</div></div>
+          <div class="form-row">
+            <div class="form-field"><div class="form-label">Feed Type</div>
+              <input class="form-input text-right" value="${feed.type||''}" readonly></div>
+          </div>
+          <div class="form-row">
+            <div class="form-field"><div class="form-label">Name</div>
+              <input class="form-input text-right" value="${feed.name||''}" onchange="updateFeedField('name',this.value)"></div>
+          </div>
+          <div class="form-row">
+            <div class="form-field"><div class="form-label">Item Source</div>
+              <select class="form-select" onchange="updateFeedField('item_source',this.value)">
+                ${allSupplies.map(s => `<option ${s===feed.item_source?'selected':''}>${s}</option>`).join('')}
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-header"><div class="section-help">?</div><div class="section-title">Supply Area Definition</div></div>
+          <div class="form-row">
+            <div class="form-field"><div class="form-label">Image-Trigger Delay [mm]</div>
+              <input class="form-input text-right" type="number" value="${feed.image_trigger_delay||0}"></div>
+          </div>
+          <div class="form-row">
+            <div class="form-field"><div class="form-label">Reference Offset X [mm]</div>
+              <input class="form-input text-right" type="number" value="${feed.ref_offset_x||0}"></div>
+            <div class="form-field"><div class="form-label">Reference Offset Y [mm]</div>
+              <input class="form-input text-right" type="number" value="${feed.ref_offset_y||0}"></div>
+          </div>
+          <div class="form-row">
+            <div class="form-field"><div class="form-label">Reference Angle [°]</div>
+              <input class="form-input text-right" type="number" value="${feed.ref_angle||0}"></div>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-header"><div class="section-help">?</div><div class="section-title">Robot Offsets</div></div>
+          ${robots.map((r,i) => `
+            <div class="form-row" style="align-items:center">
+              <div class="form-field" style="flex:0;min-width:90px;font-size:12px;font-weight:500">${r.name}</div>
+              <div class="form-field"><div class="form-label">Offset X [mm]</div>
+                <input class="form-input text-right" type="number" value="${feed.robot_offsets?.[i]?.offset_x||0}"></div>
+              <div class="form-field"><div class="form-label">Offset Y [mm]</div>
+                <input class="form-input text-right" type="number" value="${feed.robot_offsets?.[i]?.offset_y||0}"></div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+
+      <div>
+        <div class="section">
+          <div class="section-header"><div class="section-help">?</div><div class="section-title">Trigger Generation</div></div>
+          <div class="form-row">
+            <div class="form-field" style="flex:0">
+              <div class="form-label">Generate Batches Automatically</div>
+              <label class="form-check" style="margin-top:6px">
+                <input type="checkbox" ${feed.generate_batches_auto?'checked':''} onchange="updateFeedField('generate_batches_auto',this.checked)">
+              </label>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-field"><div class="form-label">Maximum distance between batches [mm]</div>
+              <input class="form-input text-right" type="number" value="${feed.max_batch_distance||0}"></div>
+          </div>
+          <div class="form-row">
+            <div class="form-field"><div class="form-label">Minimum distance between batches [mm]</div>
+              <input class="form-input text-right" type="number" value="${feed.min_batch_distance||0}"></div>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-header"><div class="section-help">?</div><div class="section-title">Supply Area Restrictions</div></div>
+          ${['Filter Below X','Filter Above X','Filter Below Y','Filter Above Y'].map(label => `
+            <div class="form-row" style="align-items:center">
+              <div style="flex:0;margin-right:8px"><label class="form-check"><input type="checkbox"></label></div>
+              <div class="form-field"><div class="form-label">${label} [mm]</div>
+                <input class="form-input text-right" type="number" disabled value="0"></div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function updateFeedField(field, value) {
+  const p = state.project;
+  const f = p.feeds.find(f => f.id === state.selectedFeed);
+  if (f) f[field] = value;
+}
+
+function addFeed() {
+  const p = state.project;
+  const id = (p.feeds||[]).length + 1;
+  p.feeds = p.feeds || [];
+  p.feeds.push({ id, name: `Feed ${id}`, type: 'Pick Conveyor', item_source: '', robot_offsets: [] });
+  state.selectedFeed = id;
+  renderRightPanel(); renderContent();
+}
+
+// ===================================================================
+// SUPPLIES
+// ===================================================================
+function renderSupplies(container) {
+  const p = state.project;
+  const supplies = p?.supplies || [];
+  const supply = supplies.find(s => s.id === state.selectedSupply) || supplies[0];
+  if (!supply) {
+    container.innerHTML = `<div class="p-12 text-muted">No supplies configured.</div>`;
+    return;
+  }
+  if (!state.selectedSupply) state.selectedSupply = supply.id;
+  const robots = p.robots || [];
+
+  container.innerHTML = `
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:0;height:100%">
+      <div style="border-right:1px solid var(--section-border);overflow-y:auto">
+        <div class="section">
+          <div class="section-header"><div class="section-help">?</div><div class="section-title">Supply Settings</div></div>
+          <div class="form-row">
+            <div class="form-field"><div class="form-label">Supply Type</div>
+              <input class="form-input text-right" value="${supply.type||''}" readonly></div>
+          </div>
+          <div class="form-row">
+            <div class="form-field"><div class="form-label">Name</div>
+              <input class="form-input text-right" value="${supply.name||''}" onchange="updateSupplyField('name',this.value)"></div>
+          </div>
+          <div class="form-row">
+            <div class="form-field"><div class="form-label">IP Address</div>
+              <input class="form-input text-right" value="${supply.ip||''}" onchange="updateSupplyField('ip',this.value)"></div>
+          </div>
+        </div>
+
+        <div class="section" ${supply.type!=='Pick Vision System'?'style="display:none"':''}>
+          <div class="section-header"><div class="section-help">?</div><div class="section-title">Vision Driver</div></div>
+          ${['Cognex (Basic)','Cognex (Extended)','Keyence','Custom'].map(driver => `
+            <div class="form-row" style="margin-bottom:8px">
+              <label class="form-check">
+                <input type="radio" name="vdriver_${supply.id}" value="${driver}" ${supply.vision_driver===driver?'checked':''}
+                       onchange="updateSupplyField('vision_driver','${driver}')">
+                ${driver}
+              </label>
+            </div>
+          `).join('')}
+          <div class="form-row">
+            <div class="form-field"><div class="form-label">Driver Name</div>
+              <input class="form-input" value="${supply.driver_name||''}" ${supply.vision_driver!=='Custom'?'readonly':''}></div>
+          </div>
+          <div class="form-row">
+            <div class="form-field"><div class="form-label">Driver Port</div>
+              <input class="form-input text-right" type="number" value="${supply.driver_port||0}" ${supply.vision_driver!=='Custom'?'readonly':''}></div>
+          </div>
+        </div>
+      </div>
+
+      <div style="overflow-y:auto">
+        <div class="section">
+          <div class="section-header"><div class="section-help">?</div><div class="section-title">Master Robots</div></div>
+          <p class="text-sm text-muted" style="margin-bottom:12px">To define the primary master and the order of its backup masters, drag and drop the robot entries until they are in the desired order.</p>
+          ${robots.map(r => `
+            <div style="padding:8px 12px;border:1px solid var(--section-border);border-radius:3px;margin-bottom:6px;cursor:grab;font-size:12px;font-weight:500">
+              ${r.name}
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function updateSupplyField(field, value) {
+  const p = state.project;
+  const s = p.supplies.find(s => s.id === state.selectedSupply);
+  if (s) s[field] = value;
+}
+
+function addSupply() {
+  const p = state.project;
+  const id = (p.supplies||[]).length + 1;
+  p.supplies = p.supplies || [];
+  p.supplies.push({ id, name: `Supply ${id}`, type: 'Pick Vision System', ip: '', vision_driver: 'Cognex (Basic)', driver_name: 'COGNEX', driver_port: 23 });
+  state.selectedSupply = id;
+  renderRightPanel(); renderContent();
+}
+
+// ===================================================================
+// PRODUCTS
+// ===================================================================
+function renderProducts(container) {
+  const p = state.project;
+  const products = p?.products || [];
+  const product = products.find(pr => pr.id === state.selectedProduct) || products[0];
+  if (!product) {
+    container.innerHTML = `<div class="p-12 text-muted">No products configured. Select a type from the right panel to configure it.</div>`;
+    return;
+  }
+  if (!state.selectedProduct) state.selectedProduct = product.id;
+  const grippers = p.grippers || [];
+
+  container.innerHTML = `
+    <div class="section">
+      <div class="section-header"><div class="section-help">?</div><div class="section-title">Type Settings</div></div>
+      <div class="form-row">
+        <div class="form-field"><div class="form-label">Name</div>
+          <input class="form-input text-right" value="${product.name||''}" onchange="updateProductField('name',this.value)"></div>
+        <div class="form-field" style="flex:0;min-width:80px"><div class="form-label">Color</div>
+          <input type="color" value="${product.color||'#0078d4'}" style="height:28px;width:60px;border:1px solid var(--field-border);border-radius:3px"
+                 onchange="updateProductField('color',this.value)"></div>
+        <div class="form-field"><div class="form-label">Tolerance X [mm]</div>
+          <input class="form-input text-right" type="number" value="${product.tolerance_x||0}" onchange="updateProductField('tolerance_x',+this.value)"></div>
+        <div class="form-field"><div class="form-label">Tolerance Y [mm]</div>
+          <input class="form-input text-right" type="number" value="${product.tolerance_y||0}" onchange="updateProductField('tolerance_y',+this.value)"></div>
+        <div class="form-field"><div class="form-label">Minimum Score [%]</div>
+          <input class="form-input text-right" type="number" value="${product.min_score||0}" onchange="updateProductField('min_score',+this.value)"></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-header"><div class="section-help">?</div><div class="section-title">Supported TCPs</div></div>
+      ${grippers.map(g => `
+        <div style="margin-bottom:12px">
+          <div style="font-size:12px;font-weight:600;margin-bottom:8px">${g.name}</div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap">
+            ${Array.from({length:16}, (_,i) => {
+              const checked = product.supported_tcps?.[g.name]?.[i] || false;
+              return `<label class="form-check" style="flex:0;min-width:60px">
+                <input type="checkbox" ${checked?'checked':''}>
+                <span class="text-sm">TCP ${String(i+1).padStart(2,'0')}</span>
+              </label>`;
+            }).join('')}
+          </div>
+        </div>
+      `).join('')}
+    </div>
+  `;
+}
+
+function updateProductField(field, value) {
+  const p = state.project;
+  const pr = p.products.find(pr => pr.id === state.selectedProduct);
+  if (pr) pr[field] = value;
+}
+
+function selectProduct(id) {
+  if (!state.project.products.find(p => p.id === id)) {
+    // It's an "Unused Type" - create it
+    const idx = id;
+    state.project.products.push({ id: idx, name: `Type ${String(idx).padStart(2,'0')}`, color: '#888888', tolerance_x: 5, tolerance_y: 5, min_score: 80, supported_tcps: {}, enabled: true });
+  }
+  state.selectedProduct = id;
+  renderRightPanel();
+  renderContent();
+}
+
+// ===================================================================
+// FORMATS
+// ===================================================================
+function renderFormats(container) {
+  const p = state.project;
+  const formats = p?.formats || [];
+
+  container.innerHTML = `
+    <div class="section">
+      <div class="section-title" style="margin-bottom:12px">Formats</div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">
+        ${formats.map(f => `
+          <div style="display:flex;gap:6px;align-items:center">
+            <span style="font-size:11px;color:var(--text-muted);min-width:30px;text-align:right">${String(f.id).padStart(3,'0')}</span>
+            <input class="form-input text-right" style="flex:1" value="${f.name||''}" placeholder="—"
+                   onchange="updateFormat(${f.id},'name',this.value)">
+            ${f.name ? `
+              <button class="btn btn-sm btn-secondary" onclick="deleteFormat(${f.id})">🗑 Delete</button>
+            ` : `
+              <button class="btn btn-sm btn-primary" onclick="createFormat(${f.id})">🔧 Create</button>
+            `}
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `;
+}
+
+function updateFormat(id, field, value) {
+  const f = state.project.formats.find(f => f.id === id);
+  if (f) f[field] = value;
+}
+
+function createFormat(id) {
+  const name = prompt(`Format ${String(id).padStart(3,'0')} name:`);
+  if (name) {
+    const f = state.project.formats.find(f => f.id === id);
+    if (f) { f.name = name; renderContent(); }
+  }
+}
+
+function deleteFormat(id) {
+  if (confirm('Delete this format?')) {
+    const f = state.project.formats.find(f => f.id === id);
+    if (f) { f.name = ''; renderContent(); }
+  }
+}
+
+// ===================================================================
+// GRIP RULES
+// ===================================================================
+function renderGripRules(container) {
+  const p = state.project;
+  const rules = p?.grip_rules || [];
+
+  // Generate 4 rows of 16 rules (= 64 total)
+  const rulesHtml = (rowStart, count) => {
+    return Array.from({length:count}, (_,i) => {
+      const ruleId = rowStart + i;
+      const rule = rules.find(r => r.id === ruleId);
+      const isChecked = rule?.active_on_startup || false;
+      const isSelected = state.selectedRule === ruleId;
+      return `<div class="rule-cell ${isChecked?'checked':''} ${isSelected?'selected':''}"
+                   onclick="selectRule(${ruleId})" title="Rule ${String(ruleId).padStart(2,'0')}">
+        Rule ${String(ruleId).padStart(2,'0')}
+      </div>`;
+    }).join('');
+  };
+
+  const selectedRule = rules.find(r => r.id === state.selectedRule);
+  const products = p.products || [];
+  const tool = selectedRule?.tools?.[0];
+
+  container.innerHTML = `
+    <div class="section">
+      <div class="section-header">
+        <div class="section-help">?</div>
+        <div class="section-title">Transitions</div>
+      </div>
+      <div class="form-row mb-8">
+        <label class="form-check"><input type="checkbox" checked> Active on Startup</label>
+      </div>
+      <div style="overflow-x:auto">
+        <div style="display:grid;grid-template-columns:repeat(16,1fr);gap:3px;min-width:600px;margin-bottom:4px">
+          ${rulesHtml(1,16)}
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(16,1fr);gap:3px;min-width:600px;margin-bottom:4px">
+          ${rulesHtml(17,16)}
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(16,1fr);gap:3px;min-width:600px;margin-bottom:4px">
+          ${rulesHtml(33,16)}
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(16,1fr);gap:3px;min-width:600px">
+          ${rulesHtml(49,16)}
+        </div>
+      </div>
+    </div>
+
+    ${selectedRule ? `
+    <div class="section">
+      <div class="section-title" style="margin-bottom:12px">Tool 1</div>
+      <div class="form-row" style="align-items:center">
+        <div class="form-field" style="flex:0">
+          <div class="form-label">Allowed Types</div>
+          <div style="display:flex;gap:4px;margin-top:4px">
+            ${products.map((pr,i) => `
+              <div class="type-badge" style="background:${pr.color}" title="${pr.name}">${String(pr.id).padStart(2,'0')}</div>
+            `).join('')}
+          </div>
+        </div>
+        <div class="form-field">
+          <div class="form-label">Minimum Weight</div>
+          <div style="display:flex;align-items:center;gap:6px">
+            <label class="form-check"><input type="checkbox"></label>
+            <input class="form-input text-right" type="number" value="0" style="width:100px" disabled>
+          </div>
+        </div>
+        <div class="form-field">
+          <div class="form-label">Pick Level</div>
+          <select class="form-select" style="width:120px">
+            ${['Level 1','Level 2','Level 3'].map(l => `<option>${l}</option>`).join('')}
+          </select>
+        </div>
+      </div>
+      <div class="form-row" style="align-items:center">
+        <div class="form-field" style="flex:0;min-width:120px"></div>
+        <div class="form-field">
+          <div class="form-label">Maximum Weight</div>
+          <div style="display:flex;align-items:center;gap:6px">
+            <label class="form-check"><input type="checkbox"></label>
+            <input class="form-input text-right" type="number" value="0" style="width:100px" disabled>
+          </div>
+        </div>
+        <div class="form-field">
+          <div class="form-label">Place Level</div>
+          <select class="form-select" style="width:120px">
+            ${['Level 1','Level 2','Level 3'].map(l => `<option>${l}</option>`).join('')}
+          </select>
+        </div>
+      </div>
+    </div>
+    ` : `<div class="p-12 text-muted">Select a rule above to configure it.</div>`}
+  `;
+}
+
+// ===================================================================
+// WORK AREAS
+// ===================================================================
+function renderWorkAreas(container) {
+  const p = state.project;
+  const robots = p?.robots || [];
+  const feeds = p?.feeds || [];
+  const robot = robots.find(r => r.id === state.selectedRobot) || robots[0];
+  if (!robot) { container.innerHTML = `<div class="p-12 text-muted">No robots configured.</div>`; return; }
+  if (!state.selectedRobot) state.selectedRobot = robot.id;
+
+  const workAreas = p.work_areas?.find(wa => wa.robot_id === robot.id);
+
+  container.innerHTML = `
+    <div style="overflow-y:auto">
+      ${feeds.map(feed => {
+        const wa = workAreas?.feeds?.find(f => f.feed === feed.name) || {};
+        return `
+          <div class="section">
+            <div class="section-header">
+              <div class="section-help">?</div>
+              <div class="section-title">Work Area for '${feed.name}'</div>
+            </div>
+            <div class="form-row" style="margin-bottom:6px">
+              <label class="form-check">
+                <input type="checkbox" ${wa.enabled?'checked':''}>
+                Allow the robot to operate on this feed
+              </label>
+            </div>
+            <div class="form-row">
+              <div class="form-field">
+                <div class="form-label">Minimum X [mm]</div>
+                <div style="display:flex;align-items:center;gap:6px">
+                  <label class="form-check"><input type="checkbox" ${wa.min_x!=null?'checked':''}></label>
+                  <input class="form-input text-right" type="number" value="${wa.min_x||0}" ${wa.min_x==null?'disabled':''}>
+                </div>
+              </div>
+              <div class="form-field">
+                <div class="form-label">Maximum X [mm]</div>
+                <div style="display:flex;align-items:center;gap:6px">
+                  <label class="form-check"><input type="checkbox" ${wa.max_x!=null?'checked':''}></label>
+                  <input class="form-input text-right" type="number" value="${wa.max_x||0}" ${wa.max_x==null?'disabled':''}>
+                </div>
+              </div>
+              <div class="form-field">
+                <div class="form-label">Slow (mm)</div>
+                <div style="display:flex;align-items:center;gap:6px">
+                  <label class="form-check"><input type="checkbox" ${wa.slow_mm!=null?'checked':''}></label>
+                  <input class="form-input text-right" type="number" value="${wa.slow_mm||0}" ${wa.slow_mm==null?'disabled':''}>
+                </div>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-field">
+                <div class="form-label">Minimum Y [mm]</div>
+                <div style="display:flex;align-items:center;gap:6px">
+                  <label class="form-check"><input type="checkbox" ${wa.min_y!=null?'checked':''}></label>
+                  <input class="form-input text-right" type="number" value="${wa.min_y||0}" ${wa.min_y==null?'disabled':''}>
+                </div>
+              </div>
+              <div class="form-field">
+                <div class="form-label">Maximum Y [mm]</div>
+                <div style="display:flex;align-items:center;gap:6px">
+                  <label class="form-check"><input type="checkbox" ${wa.max_y!=null?'checked':''}></label>
+                  <input class="form-input text-right" type="number" value="${wa.max_y||0}" ${wa.max_y==null?'disabled':''}>
+                </div>
+              </div>
+              <div class="form-field">
+                <div class="form-label">Stop (mm)</div>
+                <div style="display:flex;align-items:center;gap:6px">
+                  <label class="form-check"><input type="checkbox" ${wa.stop_mm!=null?'checked':''}></label>
+                  <input class="form-input text-right" type="number" value="${wa.stop_mm||0}" ${wa.stop_mm==null?'disabled':''}>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('')}
+    </div>
+  `;
+}
+
+// ===================================================================
+// LOAD SHARE
+// ===================================================================
+function renderLoadShare(container) {
+  const p = state.project;
+  const shares = p?.load_share || [];
+  const robots = p.robots || [];
+  const products = p.products || [];
+
+  container.innerHTML = `
+    <div style="overflow-y:auto">
+      ${shares.map((share, i) => `
+        <div class="section">
+          <div class="section-header">
+            <div class="section-help">?</div>
+            <div class="section-title">Share Category</div>
+          </div>
+          <div class="form-row" style="align-items:center">
+            <div class="form-field" style="flex:0">
+              <div class="form-label">Affected Types</div>
+              <div style="display:flex;gap:4px;margin-top:4px">
+                ${products.map(pr => {
+                  const active = share.affected_types?.includes(pr.name);
+                  return `<div class="type-badge" style="background:${active?pr.color:'#ccc'};cursor:pointer" title="${pr.name}">${String(pr.id).padStart(2,'0')}</div>`;
+                }).join('')}
+              </div>
+            </div>
+            <div class="form-field">
+              <div class="form-label">Minimum Y [mm]</div>
+              <div style="display:flex;gap:6px;align-items:center">
+                <label class="form-check"><input type="checkbox"></label>
+                <input class="form-input text-right" type="number" value="0" disabled>
+              </div>
+            </div>
+            <div class="form-field" style="flex:0">
+              <div class="form-label">Strategy</div>
+              <label class="form-check" style="margin-bottom:4px">
+                <input type="radio" name="strat_${i}" value="Balanced" ${share.strategy==='Balanced'?'checked':''}> Balanced
+              </label>
+              <label class="form-check">
+                <input type="radio" name="strat_${i}" value="Greedy" ${share.strategy==='Greedy'?'checked':''}> Greedy
+              </label>
+            </div>
+          </div>
+          <div class="form-row">
+            ${robots.map(r => `
+              <div class="form-field">
+                <div class="form-label">${r.name}</div>
+                <input class="form-input text-right" type="number" value="${share.ratios?.[r.name]||1}">
+              </div>
+            `).join('')}
+          </div>
+          <div class="form-row">
+            <div class="form-field">
+              <div class="form-label">Maximum Y [mm]</div>
+              <div style="display:flex;gap:6px;align-items:center">
+                <label class="form-check"><input type="checkbox"></label>
+                <input class="form-input text-right" type="number" value="0" disabled>
+              </div>
+            </div>
+          </div>
+        </div>
+      `).join('')}
+      <div class="new-item-btn" onclick="addLoadShare()">+ New Share Category</div>
+    </div>
+  `;
+}
+
+function addLoadShare() {
+  state.project.load_share = state.project.load_share || [];
+  state.project.load_share.push({ affected_types: [], strategy: 'Balanced', ratios: {} });
+  renderContent();
+}
+
+// ===================================================================
+// PICK/PLACE PATTERNS
+// ===================================================================
+function renderPickPatterns(container) {
+  const p = state.project;
+  const patterns = p?.pick_patterns || [];
+  const pattern = patterns.find(pp => pp.id === state.selectedPattern) || patterns[0];
+
+  container.innerHTML = `
+    <div class="section">
+      <div class="section-header"><div class="section-help">?</div><div class="section-title">Pattern Settings</div></div>
+      <div class="form-row">
+        <div class="form-field"><div class="form-label">Name</div>
+          <input class="form-input text-right" value="${pattern?.name||''}"></div>
+      </div>
+    </div>
+    <div class="new-item-btn" style="margin:16px" onclick="addPatternItem('pick')">+ New Pick Item</div>
+  `;
+}
+
+function renderPlacePatterns(container) {
+  const p = state.project;
+  const patterns = p?.place_patterns || [];
+  const pattern = patterns.find(pp => pp.id === state.selectedPattern) || patterns[0];
+  const products = p.products || [];
+  const robots = p.robots || [];
+
+  if (!pattern) {
+    container.innerHTML = `<div class="p-12 text-muted">No place patterns. Add one from the right panel.</div>`;
+    return;
+  }
+
+  container.innerHTML = `
+    <div style="overflow-y:auto">
+      <div class="section">
+        <div class="section-header"><div class="section-help">?</div><div class="section-title">Pattern Settings</div></div>
+        <div class="form-row">
+          <div class="form-field"><div class="form-label">Name</div>
+            <input class="form-input text-right" value="${pattern.name||''}"></div>
+        </div>
+      </div>
+
+      ${(pattern.items||[]).map((item,i) => `
+        <div class="section">
+          <div class="section-header">
+            <div class="section-help">?</div>
+            <div class="section-title">Place Item</div>
+          </div>
+          <div class="form-row" style="align-items:center">
+            <div class="form-field" style="flex:0">
+              <div class="form-label">Allowed Types</div>
+              <div style="display:flex;gap:4px;margin-top:4px">
+                ${products.map(pr => {
+                  const active = item.allowed_types?.includes(pr.name);
+                  return `<div class="type-badge" style="background:${active?pr.color:'#ccc'}" title="${pr.name}">${String(pr.id).padStart(2,'0')}</div>`;
+                }).join('')}
+              </div>
+            </div>
+            <div class="form-field" style="flex:0">
+              <div class="form-label">Robots</div>
+              <div style="font-size:18px">🤖🤖</div>
+            </div>
+            <div class="form-field"><div class="form-label">Minimum Weight</div>
+              <div style="display:flex;gap:6px;align-items:center">
+                <label class="form-check"><input type="checkbox"></label>
+                <input class="form-input text-right" type="number" value="0" disabled style="width:80px">
+              </div>
+            </div>
+            <div class="form-field"><div class="form-label">Maximum Weight</div>
+              <div style="display:flex;gap:6px;align-items:center">
+                <label class="form-check"><input type="checkbox"></label>
+                <input class="form-input text-right" type="number" value="0" disabled style="width:80px">
+              </div>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-field"><div class="form-label">Position X [mm]</div>
+              <input class="form-input text-right" type="number" value="${item.pos_x||0}"></div>
+            <div class="form-field"><div class="form-label">Position Y [mm]</div>
+              <input class="form-input text-right" type="number" value="${item.pos_y||0}"></div>
+            <div class="form-field"><div class="form-label">Position Z [mm]</div>
+              <input class="form-input text-right" type="number" value="${item.pos_z||0}"></div>
+            <div class="form-field"><div class="form-label">Rotation X [°]</div>
+              <input class="form-input text-right" type="number" value="${item.rot_x||0}"></div>
+            <div class="form-field"><div class="form-label">Rotation Y [°]</div>
+              <input class="form-input text-right" type="number" value="${item.rot_y||0}"></div>
+            <div class="form-field"><div class="form-label">Rotation Z [°]</div>
+              <input class="form-input text-right" type="number" value="${item.rot_z||0}"></div>
+            <div class="form-field"><div class="form-label">Layer</div>
+              <select class="form-select">
+                ${['Layer 1','Layer 2','Layer 3'].map(l => `<option ${item.layer===l?'selected':''}>${l}</option>`).join('')}
+              </select>
+            </div>
+          </div>
+        </div>
+      `).join('')}
+      <div class="new-item-btn" style="margin:8px 16px" onclick="addPlaceItem()">+ New Place Item</div>
+    </div>
+  `;
+}
+
+function addPattern(type) {
+  const arr = type === 'pick' ? state.project.pick_patterns : state.project.place_patterns;
+  const id = (arr||[]).length + 1;
+  arr.push({ id, name: `${type==='pick'?'Pick':'Place'} Pattern ${id}`, items: [] });
+  state.selectedPattern = id;
+  state.patternType = type;
+  renderRightPanel(); renderContent();
+}
+
+function addPlaceItem() {
+  const pattern = state.project.place_patterns.find(pp => pp.id === state.selectedPattern);
+  if (pattern) {
+    pattern.items = pattern.items || [];
+    pattern.items.push({ allowed_types: [], robots: [], pos_x: 0, pos_y: 0, pos_z: 0, rot_x: 0, rot_y: 0, rot_z: 0, layer: 'Layer 1' });
+    renderContent();
+  }
+}
+
+// ===================================================================
+// ITEM SOURCES
+// ===================================================================
+function renderItemSources(container) {
+  const p = state.project;
+  const sources = p?.item_sources || [];
+  const patterns = [...(p.pick_patterns||[]), ...(p.place_patterns||[])];
+  const supplies = p.supplies || [];
+
+  container.innerHTML = `
+    <div style="overflow-y:auto">
+      ${sources.map((src, i) => `
+        <div class="section">
+          <div class="section-header"><div class="section-help">?</div><div class="section-title">Patterns</div></div>
+          <div class="form-row">
+            <div class="form-field"><div class="form-label">Pattern Host</div>
+              <select class="form-select">
+                ${supplies.map(s => `<option ${s.name===src.pattern_host?'selected':''}>${s.name}</option>`).join('')}
+              </select>
+            </div>
+            <div class="form-field"><div class="form-label">Pattern</div>
+              <select class="form-select">
+                ${patterns.map(pp => `<option ${pp.name===src.pattern?'selected':''}>${pp.name}</option>`).join('')}
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="section">
+          <div class="section-header"><div class="section-help">?</div><div class="section-title">Vision Jobs</div></div>
+          <div class="form-row">
+            <div class="form-field"><div class="form-label">Camera</div>
+              <input class="form-input text-right" value="${src.vision_job||''}" onchange="updateItemSourceField(${i},'vision_job',this.value)">
+            </div>
+          </div>
+        </div>
+      `).join('')}
+      <div class="new-item-btn" style="margin:16px" onclick="addItemSource()">+ New Item Source</div>
+    </div>
+  `;
+}
+
+function updateItemSourceField(i, field, value) {
+  if (state.project.item_sources[i]) state.project.item_sources[i][field] = value;
+}
+
+function addItemSource() {
+  state.project.item_sources = state.project.item_sources || [];
+  state.project.item_sources.push({ pattern_host: '', pattern: '', vision_job_camera: '', vision_job: '' });
+  renderContent();
+}
+
+// ===================================================================
+// ITEM ORDER
+// ===================================================================
+function renderItemOrder(container) {
+  const p = state.project;
+  const order = p?.item_order || {};
+  const feeds = p.feeds || [];
+  const products = p.products || [];
+
+  const orderFields = ['X Position','Y Position','Z Position','Batch','Feed','Type'];
+  const orderRow = (prefix, data) => orderFields.map(f => {
+    const key = f.toLowerCase().replace(' ','_');
+    const val = data?.[key] || 'Ascending';
+    return `
+      <div style="border:1px solid var(--section-border);border-radius:3px;padding:8px;margin-bottom:6px">
+        <div style="font-size:11px;font-weight:600;margin-bottom:6px">${f}</div>
+        <div style="display:flex;gap:16px">
+          <label class="form-check"><input type="radio" name="${prefix}_${key}" value="Ascending" ${val==='Ascending'?'checked':''}> Ascending</label>
+          <label class="form-check"><input type="radio" name="${prefix}_${key}" value="Descending" ${val==='Descending'?'checked':''}> Descending</label>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  container.innerHTML = `
+    <div style="overflow-y:auto;padding:16px">
+      <div class="section-header"><div class="section-help">?</div><div class="section-title">Item Selection</div></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:12px 0">
+        <div>
+          ${['Unmatched','Match in Pick Order','Match in Place Order'].map(mode => `
+            <label class="form-check" style="margin-bottom:8px">
+              <input type="radio" name="item_sel" value="${mode}" ${order.selection_mode===mode?'checked':''}> ${mode}
+            </label>
+          `).join('')}
+        </div>
+        <div>
+          <label class="form-check" style="margin-bottom:8px">
+            <input type="checkbox" ${order.match_strict_order?'checked':''}> Match in strict order
+          </label>
+          <label class="form-check" style="margin-bottom:8px">
+            <input type="checkbox" ${order.switch_feeds_picking?'checked':''}> Switch feeds while picking
+          </label>
+          <label class="form-check">
+            <input type="checkbox" ${order.switch_feeds_placing?'checked':''}> Switch feeds while placing
+          </label>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px">
+        <div>
+          <div class="section-title" style="margin-bottom:8px">Pick Item Order</div>
+          ${orderRow('pick', order.pick_item_order)}
+        </div>
+        <div>
+          <div class="section-title" style="margin-bottom:8px">Pick Feed Order</div>
+          ${feeds.map(f => `<div style="padding:8px;border:1px solid var(--section-border);border-radius:3px;margin-bottom:6px;font-size:12px">${f.name}</div>`).join('')}
+          <div class="section-title" style="margin-top:12px;margin-bottom:8px">Pick Type Order</div>
+          ${products.map(pr => `<div style="padding:8px;border:1px solid var(--section-border);border-radius:3px;margin-bottom:6px;font-size:12px">${pr.name}</div>`).join('')}
+        </div>
+        <div></div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-top:16px">
+        <div>
+          <div class="section-title" style="margin-bottom:8px">Place Item Order</div>
+          ${orderRow('place', order.place_item_order)}
+        </div>
+        <div>
+          <div class="section-title" style="margin-bottom:8px">Place Feed Order</div>
+          ${feeds.map(f => `<div style="padding:8px;border:1px solid var(--section-border);border-radius:3px;margin-bottom:6px;font-size:12px">${f.name}</div>`).join('')}
+          <div class="section-title" style="margin-top:12px;margin-bottom:8px">Place Type Order</div>
+          ${products.map(pr => `<div style="padding:8px;border:1px solid var(--section-border);border-radius:3px;margin-bottom:6px;font-size:12px">${pr.name}</div>`).join('')}
+        </div>
+        <div></div>
+      </div>
+    </div>
+  `;
+}
+
+// ===================================================================
+// ROBOT MOTION
+// ===================================================================
+function renderRobotMotion(container) {
+  const p = state.project;
+  const rm = p?.robot_motion || [];
+  const robots = p.robots || [];
+  const feeds = p.feeds || [];
+  const products = p.products || [];
+
+  const robot = robots.find(r => r.id === state.selectedRobot) || robots[0];
+  const feed = feeds.find(f => f.id === state.selectedFeed) || feeds[0];
+
+  if (!robot) { container.innerHTML = `<div class="p-12 text-muted">No robots configured.</div>`; return; }
+
+  const robotMotion = rm.find(r => r.robot_id === robot.id);
+  const feedMotion = robotMotion?.feeds?.find(f => f.feed === feed?.name);
+  const prods = feedMotion?.products || [];
+
+  container.innerHTML = `
+    <div style="overflow-y:auto">
+      ${prods.map(prod => `
+        <div class="section">
+          <div class="section-header">
+            <div class="section-help">?</div>
+            <div class="section-title">${prod.product}</div>
+          </div>
+          <div class="form-row">
+            <div class="form-field" style="flex:0;min-width:100px"></div>
+            <div class="form-field"><div class="form-label">Approach Position Offset (X, Y, Z) [mm]</div>
+              <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:4px">
+                ${prod.approach_pos.map(v => `<input class="form-input text-right" type="number" value="${v}">`).join('')}
+              </div>
+            </div>
+            <div class="form-field"><div class="form-label">Approach Velocity [mm/sec]</div>
+              <input class="form-input text-right" type="number" value="${prod.approach_vel}"></div>
+            <div class="form-field"><div class="form-label">Approach Precision</div>
+              <select class="form-select">
+                ${['Regular','High','Very High'].map(p => `<option ${p===prod.approach_precision?'selected':''}>${p}</option>`).join('')}
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-field" style="flex:0;min-width:100px"></div>
+            <div class="form-field"><div class="form-label">Processing Position Offset (X, Y, Z) [mm]</div>
+              <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:4px">
+                ${prod.processing_pos.map(v => `<input class="form-input text-right" type="number" value="${v}">`).join('')}
+              </div>
+            </div>
+            <div class="form-field"><div class="form-label">Processing Velocity [mm/sec]</div>
+              <input class="form-input text-right" type="number" value="${prod.processing_vel}"></div>
+            <div class="form-field"><div class="form-label">Processing Precision</div>
+              <select class="form-select">
+                ${['Regular','Position Level'].map(p => `<option ${p===prod.processing_precision?'selected':''}>${p}</option>`).join('')}
+              </select>
+            </div>
+            <div class="form-field"><div class="form-label">Level</div>
+              <select class="form-select" style="width:70px">
+                <option>1</option><option>2</option><option>3</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-field" style="flex:0;min-width:100px"></div>
+            <div class="form-field"><div class="form-label">Escape Position Offset (X, Y, Z) [mm]</div>
+              <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:4px">
+                ${prod.escape_pos.map(v => `<input class="form-input text-right" type="number" value="${v}">`).join('')}
+              </div>
+            </div>
+            <div class="form-field"><div class="form-label">Escape Velocity [mm/sec]</div>
+              <input class="form-input text-right" type="number" value="${prod.escape_vel}"></div>
+            <div class="form-field"><div class="form-label">Escape Precision</div>
+              <select class="form-select">
+                ${['Regular','High','Very High'].map(p => `<option ${p===prod.escape_precision?'selected':''}>${p}</option>`).join('')}
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-field"><div class="form-label">Duration [sec]</div>
+              <input class="form-input text-right" type="number" step="0.001" value="${prod.duration||0.8}"></div>
+            <div class="form-field"><div class="form-label">Advance [sec]</div>
+              <input class="form-input text-right" type="number" step="0.001" value="${prod.advance||0.2}"></div>
+          </div>
+        </div>
+      `).join('')}
+      ${prods.length===0 ? `<div class="p-12 text-muted">No motion data for this robot/feed combination. Select a robot and feed from the right panel.</div>` : ''}
+    </div>
+  `;
+}
+
+// ===================================================================
+// MULTI PICK / PLACE (placeholder)
+// ===================================================================
+function renderMultiPick(container) {
+  container.innerHTML = `<div class="p-12 text-muted">Multi Pick configuration - Select a robot from the right panel.</div>`;
+}
+
+function renderMultiPlace(container) {
+  container.innerHTML = `<div class="p-12 text-muted">Multi Place configuration - Select a robot from the right panel.</div>`;
+}
+
+// ===================================================================
+// COCKPIT
+// ===================================================================
+function renderCockpit(container) {
+  container.innerHTML = `
+    <div class="cockpit-layout">
+      <div class="cockpit-controls">
+        <div class="section-header" style="margin-bottom:16px">
+          <div class="section-help">?</div>
+          <div class="section-title">System Control</div>
+        </div>
+
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px;font-size:14px;font-weight:600">
+          ☁ Transmit Project
+        </div>
+
+        <div style="margin-bottom:12px">
+          <button class="btn btn-secondary" style="width:100%;justify-content:flex-start;margin-bottom:8px"
+                  onclick="cockpitConnect()">
+            ⚡ Connect
+          </button>
+        </div>
+
+        <div style="margin-bottom:12px">
+          <div class="form-field" style="margin-bottom:8px">
+            <div class="form-label">Format</div>
+            <select class="form-select" id="cockpitFormat">
+              ${(state.project?.formats||[]).filter(f => f.name).map(f => `
+                <option value="${f.name}">${f.name}</option>
+              `).join('')}
+            </select>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:6px">
+            <button class="btn btn-secondary" onclick="cockpitLoad()">📥 Load</button>
+            <button class="btn btn-secondary" onclick="cockpitEnable()">✅ Enable</button>
+          </div>
+          <button class="btn btn-success" style="width:100%" onclick="cockpitLaunch()">🚀 Launch</button>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+          <button class="btn btn-secondary btn-sm">🔒 Lock All</button>
+          <button class="btn btn-secondary btn-sm">🔓 Unlock All</button>
+        </div>
+
+        <div class="kpi-grid" style="padding:0;margin-top:16px">
+          <div class="kpi-card green">
+            <div class="kpi-label">Picks/Min</div>
+            <div class="kpi-value" id="kpiPicksMin">—</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">Total Picks</div>
+            <div class="kpi-value" id="kpiTotalPicks">—</div>
+          </div>
+          <div class="kpi-card red">
+            <div class="kpi-label">Missed</div>
+            <div class="kpi-value" id="kpiMissed">—</div>
+          </div>
+        </div>
+
+        <!-- Robot Status Grid -->
+        <div style="margin-top:12px">
+          ${(state.project?.robots||[]).map(r => `
+            <div class="robot-card" style="margin-bottom:8px">
+              <div class="robot-card-header">
+                ${r.name}
+                <div class="status-led" id="robot-led-${r.id}"></div>
+              </div>
+              <div class="robot-card-body">
+                <div class="robot-stat">
+                  <span class="lbl">Picks/min</span>
+                  <span class="val" id="robot-ppm-${r.id}">—</span>
+                </div>
+                <div class="robot-stat">
+                  <span class="lbl">Total</span>
+                  <span class="val" id="robot-total-${r.id}">—</span>
+                </div>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+
+      <div class="cockpit-log">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+          <div class="section-title">Event Log</div>
+          <button class="btn btn-sm btn-secondary" onclick="clearEventLog()">Clear</button>
+        </div>
+        <div class="event-log" id="eventLog">
+          <div class="text-muted">No events yet.</div>
+        </div>
+        <div style="margin-top:8px;font-size:11px;color:var(--text-muted)" id="connectionStatus">
+          No connection has been made to the system.
+        </div>
+
+        <!-- Live Conveyor Status -->
+        <div style="margin-top:12px">
+          <div class="section-title" style="margin-bottom:8px">Conveyor Status</div>
+          <table class="data-table">
+            <thead>
+              <tr><th>Conveyor</th><th>Status</th><th>Speed (mm/s)</th></tr>
+            </thead>
+            <tbody id="conveyorTable">
+              ${(state.project?.feeds||[]).map(f => `
+                <tr>
+                  <td>${f.name}</td>
+                  <td><div class="status-led" id="conv-led-${f.id}"></div></td>
+                  <td class="font-mono" id="conv-speed-${f.id}">—</td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  `;
+
+  // Start live data polling when cockpit is shown
+  if (state.liveInterval) clearInterval(state.liveInterval);
+  state.liveInterval = setInterval(updateLiveData, 2000);
+  updateLiveData();
+  loadEventLog();
+}
+
+async function cockpitConnect() {
+  try {
+    const res = await fetch('/api/control/connect', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ip: '192.168.0.1' })
+    });
+    const data = await res.json();
+    const statusEl = document.getElementById('connectionStatus');
+    if (statusEl) statusEl.textContent = data.success ? 'Connected to system.' : 'Connection failed.';
+    loadEventLog();
+    showToast(data.success ? 'Connected' : 'Connection failed', data.success ? 'success' : 'error');
+  } catch (e) { showToast('Connect error', 'error'); }
+}
+
+async function cockpitLoad() {
+  const fmt = document.getElementById('cockpitFormat')?.value;
+  try {
+    await fetch('/api/control/load', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ format: fmt })
+    });
+    loadEventLog();
+    document.getElementById('currentFormatText').textContent = fmt || '—';
+    showToast(`Format '${fmt}' loaded`, 'success');
+  } catch (e) { showToast('Load error', 'error'); }
+}
+
+async function cockpitEnable() {
+  try {
+    await fetch('/api/control/enable', { method: 'POST' });
+    loadEventLog();
+    showToast('System enabled', 'success');
+  } catch (e) { showToast('Enable error', 'error'); }
+}
+
+async function cockpitLaunch() {
+  if (!confirm('Launch system?')) return;
+  const fmt = document.getElementById('cockpitFormat')?.value;
+  try {
+    const res = await fetch('/api/control/launch', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ format: fmt })
+    });
+    loadEventLog();
+    showToast('System launched', 'success');
+  } catch (e) { showToast('Launch error', 'error'); }
+}
+
+async function updateLiveData() {
+  try {
+    const sysRes = await fetch('/api/live/system');
+    const sysData = await sysRes.json();
+    if (sysData.success) {
+      const d = sysData.system;
+      setKpi('kpiPicksMin', d.PicksPerMinute?.toFixed(1) || '0.0');
+      setKpi('kpiTotalPicks', d.TotalPicks || '0');
+      setKpi('kpiMissed', d.MissedItems || '0');
+    }
+  } catch (e) { /* silent */ }
+
+  try {
+    const robRes = await fetch('/api/live/robots');
+    const robData = await robRes.json();
+    if (robData.success) {
+      Object.entries(robData.robots).forEach(([key, data]) => {
+        // Update robot status LEDs and stats
+        (state.project?.robots || []).forEach(r => {
+          const led = document.getElementById(`robot-led-${r.id}`);
+          const ppm = document.getElementById(`robot-ppm-${r.id}`);
+          const total = document.getElementById(`robot-total-${r.id}`);
+          if (led) led.className = `status-led ${data.Running ? 'green' : ''}`;
+          if (ppm) ppm.textContent = (data.PicksPerMinute || 0).toFixed(1);
+          if (total) total.textContent = data.TotalPicks || 0;
+        });
+      });
+    }
+  } catch (e) { /* silent */ }
+}
+
+function setKpi(id, val) {
+  const el = document.getElementById(id);
+  if (el) el.textContent = val;
+}
+
+async function loadEventLog() {
+  try {
+    const res = await fetch('/api/events?limit=50');
+    const data = await res.json();
+    const log = document.getElementById('eventLog');
+    if (log && data.success) {
+      if (!data.events.length) {
+        log.innerHTML = '<div class="text-muted">No events yet.</div>';
+        return;
+      }
+      log.innerHTML = data.events.slice().reverse().map(e => `
+        <div class="event-${e.level}">
+          <span class="event-time">${new Date(e.timestamp).toLocaleTimeString()}</span>
+          <span>[${e.level}]</span> ${e.message}
+        </div>
+      `).join('');
+      log.scrollTop = log.scrollHeight;
+    }
+  } catch (e) { /* silent */ }
+}
+
+async function clearEventLog() {
+  await fetch('/api/events/clear', { method: 'POST' });
+  loadEventLog();
+}
+
+// ===================================================================
+// ADJUST MOTION
+// ===================================================================
+function renderAdjustMotion(container) {
+  container.innerHTML = `
+    <div style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--text-muted);font-size:13px">
+      Online adjustment of motion parameters is only available when you are connected to a system that is currently operating.
+    </div>
+  `;
+}
+
+// ===================================================================
+// HEALTH CHECK
+// ===================================================================
+function startHealthCheck() {
+  checkHealth();
+  setInterval(checkHealth, 5000);
+}
+
+async function checkHealth() {
+  try {
+    const res = await fetch('/api/health');
+    const data = await res.json();
+    const dot = document.getElementById('connDot');
+    const text = document.getElementById('connText');
+    if (data.simulation) {
+      dot.className = 'conn-dot sim';
+      text.textContent = 'Simulation Mode';
+    } else if (data.grpc) {
+      dot.className = 'conn-dot ok';
+      text.textContent = 'Connected';
+    } else {
+      dot.className = 'conn-dot err';
+      text.textContent = 'No PLC';
+    }
+  } catch (e) {
+    const dot = document.getElementById('connDot');
+    const text = document.getElementById('connText');
+    dot.className = 'conn-dot err';
+    text.textContent = 'Server Offline';
+  }
+}
+
+// ===================================================================
+// FILE MENU
+// ===================================================================
+function toggleFileMenu() {
+  const dd = document.getElementById('fileDropdown');
+  dd.classList.toggle('hidden');
+}
+
+function handleGlobalClick(e) {
+  const btn = document.getElementById('fileMenuBtn');
+  const dd = document.getElementById('fileDropdown');
+  if (btn && dd && !btn.contains(e.target)) {
+    dd.classList.add('hidden');
+  }
+}
+
+function showHelp() {
+  alert('MotoPick_iCube Web Interface\nVersion 1.0.0\nYaskawa Italia Srl');
+}
+
+// ===================================================================
+// TOAST NOTIFICATIONS
+// ===================================================================
+let toastContainer = null;
+
+function showToast(message, type = 'info') {
+  if (!toastContainer) {
+    toastContainer = document.createElement('div');
+    toastContainer.style.cssText = 'position:fixed;bottom:20px;right:20px;z-index:9999;display:flex;flex-direction:column;gap:8px';
+    document.body.appendChild(toastContainer);
+  }
+
+  const colors = { success: '#107c10', error: '#d13438', info: '#0078d4', warning: '#f0b429' };
+  const toast = document.createElement('div');
+  toast.style.cssText = `
+    padding:10px 16px;border-radius:4px;color:white;font-size:13px;font-weight:500;
+    background:${colors[type]||colors.info};
+    box-shadow:0 2px 8px rgba(0,0,0,0.2);
+    animation:fadeIn 0.2s ease;
+    max-width:300px;
+  `;
+  toast.textContent = message;
+  toastContainer.appendChild(toast);
+  setTimeout(() => { toast.remove(); }, 3000);
+}
+
+// ===================================================================
+// CLEANUP on navigation change
+// ===================================================================
+function handleSectionChange() {
+  if (state.section !== 'cockpit' && state.liveInterval) {
+    clearInterval(state.liveInterval);
+    state.liveInterval = null;
+  }
+}
+
+// Patch navigateTo to cleanup
+const _origNavigateTo = navigateTo;
+window.navigateTo = function(section) {
+  handleSectionChange();
+  _origNavigateTo(section);
+};
+</script>
+</body>
+</html>

@@ -1,0 +1,199 @@
+{
+  "name": "Demo Project",
+  "robots": [
+    {
+      "id": 1, "name": "Robot 01", "ip": "192.168.0.1",
+      "gripper": "Single Gripper", "controller": "FS100",
+      "feeds": ["Pick Conveyor", "Place Conveyor"],
+      "supplies": ["Camera", "Pattern Host"]
+    },
+    {
+      "id": 2, "name": "Robot 02", "ip": "192.168.0.2",
+      "gripper": "Single Gripper", "controller": "FS100",
+      "feeds": ["Pick Conveyor", "Place Conveyor"],
+      "supplies": []
+    }
+  ],
+  "grippers": [
+    {
+      "id": 1, "name": "Single Gripper",
+      "verify_picking": false, "verify_placing": false,
+      "tcps": [
+        {"id": 1, "mode": "Tool", "is_group": false, "tools": [true, false, false, false, false, false, false, false]},
+        {"id": 2, "mode": "Unused", "is_group": false, "tools": [false,false,false,false,false,false,false,false]},
+        {"id": 3, "mode": "Unused", "is_group": false, "tools": [false,false,false,false,false,false,false,false]},
+        {"id": 4, "mode": "Unused", "is_group": false, "tools": [false,false,false,false,false,false,false,false]},
+        {"id": 5, "mode": "Unused", "is_group": false, "tools": [false,false,false,false,false,false,false,false]},
+        {"id": 6, "mode": "Unused", "is_group": false, "tools": [false,false,false,false,false,false,false,false]},
+        {"id": 7, "mode": "Unused", "is_group": false, "tools": [false,false,false,false,false,false,false,false]},
+        {"id": 8, "mode": "Unused", "is_group": false, "tools": [false,false,false,false,false,false,false,false]},
+        {"id": 9, "mode": "Unused", "is_group": false, "tools": [false,false,false,false,false,false,false,false]},
+        {"id": 10, "mode": "Unused", "is_group": false, "tools": [false,false,false,false,false,false,false,false]},
+        {"id": 11, "mode": "Unused", "is_group": false, "tools": [false,false,false,false,false,false,false,false]},
+        {"id": 12, "mode": "Unused", "is_group": false, "tools": [false,false,false,false,false,false,false,false]},
+        {"id": 13, "mode": "Unused", "is_group": false, "tools": [false,false,false,false,false,false,false,false]},
+        {"id": 14, "mode": "Unused", "is_group": false, "tools": [false,false,false,false,false,false,false,false]},
+        {"id": 15, "mode": "Unused", "is_group": false, "tools": [false,false,false,false,false,false,false,false]},
+        {"id": 16, "mode": "Unused", "is_group": false, "tools": [false,false,false,false,false,false,false,false]}
+      ]
+    }
+  ],
+  "feeds": [
+    {
+      "id": 1, "name": "Pick Conveyor", "type": "Pick Conveyor",
+      "item_source": "Camera",
+      "image_trigger_delay": 0.0,
+      "ref_offset_x": 0.0, "ref_offset_y": 0.0, "ref_angle": 0.0,
+      "trigger": {"auto": true, "max_distance": 300.0, "min_distance": 0.0},
+      "restrictions": {"below_x": null, "above_x": null, "below_y": null, "above_y": null},
+      "robot_offsets": [
+        {"robot_id": 1, "slot": 1, "offset_x": 400.0, "offset_y": 0.0},
+        {"robot_id": 2, "slot": 1, "offset_x": 800.0, "offset_y": 0.0}
+      ]
+    },
+    {
+      "id": 2, "name": "Place Conveyor", "type": "Place Conveyor",
+      "item_source": "Pattern Host",
+      "image_trigger_delay": 0.0,
+      "ref_offset_x": 0.0, "ref_offset_y": 0.0, "ref_angle": 0.0,
+      "trigger": {"auto": false, "max_distance": 300.0, "min_distance": 0.0},
+      "restrictions": {"below_x": null, "above_x": null, "below_y": null, "above_y": null},
+      "robot_offsets": []
+    }
+  ],
+  "supplies": [
+    {
+      "id": 1, "name": "Camera", "type": "Camera",
+      "ip": "192.168.0.254",
+      "vision_driver": "Cognex (Basic)",
+      "master_robots": ["Robot 01"]
+    },
+    {
+      "id": 2, "name": "Pattern Host", "type": "Pattern Host"
+    }
+  ],
+  "products": [
+    {
+      "id": 1, "name": "Cherry", "color": "#DC2626",
+      "tolerance_x": 5.0, "tolerance_y": 5.0, "min_score": 80.0,
+      "tcps": {"Single Gripper": [true,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false]}
+    },
+    {
+      "id": 2, "name": "Grape", "color": "#7C3AED",
+      "tolerance_x": 5.0, "tolerance_y": 5.0, "min_score": 80.0,
+      "tcps": {"Single Gripper": [false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false]}
+    }
+  ],
+  "formats": [
+    {
+      "id": 1, "name": "Pure Layers",
+      "multi_pick": {"enabled": false, "mode": "Async"},
+      "multi_place": {"enabled": false, "mode": "Async"},
+      "grip_rules": [
+        {
+          "id": 1, "name": "Rule 01", "active_on_startup": true,
+          "transitions": [true,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false],
+          "tools": [
+            {"id": 1, "allowed_types": [1,2], "min_weight": null, "max_weight": null, "pick_level": "Level 1", "place_level": "Level 1"}
+          ]
+        }
+      ],
+      "work_areas": {
+        "Robot 01": {
+          "Pick Conveyor": {"enabled": true, "min_x": 250.0, "max_x": 550.0, "min_y": null, "max_y": null, "slow_mm": null, "stop_mm": null},
+          "Place Conveyor": {"enabled": true, "min_x": 650.0, "max_x": 850.0, "min_y": null, "max_y": null, "slow_mm": null, "stop_mm": 800.0}
+        },
+        "Robot 02": {
+          "Pick Conveyor": {"enabled": true, "min_x": 250.0, "max_x": 550.0, "min_y": null, "max_y": null, "slow_mm": null, "stop_mm": null},
+          "Place Conveyor": {"enabled": true, "min_x": 650.0, "max_x": 850.0, "min_y": null, "max_y": null, "slow_mm": null, "stop_mm": 800.0}
+        }
+      },
+      "load_share": [
+        {"types": [2], "min_y": null, "max_y": null, "balanced": true, "greedy": false, "robots": {"Robot 01": 1, "Robot 02": 1}},
+        {"types": [1], "min_y": null, "max_y": null, "balanced": true, "greedy": false, "robots": {"Robot 01": 1, "Robot 02": 1}}
+      ],
+      "pick_patterns": [],
+      "place_patterns": [
+        {
+          "id": 1, "name": "Place Pattern",
+          "items": [
+            {"types": [2], "robots": "all", "pos_x": 0.0, "pos_y": -50.0, "pos_z": 0.0, "rot_x": 0.0, "rot_y": 0.0, "rot_z": 0.0, "layer": 1, "min_weight": null, "max_weight": null},
+            {"types": [2], "robots": "all", "pos_x": 0.0, "pos_y": 50.0, "pos_z": 0.0, "rot_x": 0.0, "rot_y": 0.0, "rot_z": 0.0, "layer": 1, "min_weight": null, "max_weight": null},
+            {"types": [1,2], "robots": "all", "pos_x": 0.0, "pos_y": -50.0, "pos_z": 20.0, "rot_x": 0.0, "rot_y": 0.0, "rot_z": 30.0, "layer": 2, "min_weight": null, "max_weight": null},
+            {"types": [1,2], "robots": "all", "pos_x": 0.0, "pos_y": 50.0, "pos_z": 20.0, "rot_x": 0.0, "rot_y": 0.0, "rot_z": 30.0, "layer": 2, "min_weight": null, "max_weight": null}
+          ]
+        }
+      ],
+      "item_sources": {
+        "Pick Conveyor": "Camera",
+        "Place Conveyor": "Pattern Host"
+      },
+      "item_order": {
+        "Robot 01": {
+          "selection": "match_place_order",
+          "strict_order": false,
+          "switch_feeds_picking": false,
+          "switch_feeds_placing": false,
+          "pick_item_order": {"x_pos":"desc","y_pos":"desc","z_pos":"desc","batch":"asc","feed":"asc","type":"asc"},
+          "pick_feed_order": ["Pick Conveyor"],
+          "pick_type_order": ["Cherry","Grape"],
+          "place_item_order": {"x_pos":"desc","y_pos":"desc","z_pos":"desc","batch":"asc"},
+          "place_feed_order": ["Place Conveyor"],
+          "place_type_order": ["Cherry","Grape"]
+        },
+        "Robot 02": {
+          "selection": "match_place_order",
+          "strict_order": false,
+          "switch_feeds_picking": false,
+          "switch_feeds_placing": false,
+          "pick_item_order": {"x_pos":"desc","y_pos":"desc","z_pos":"desc","batch":"asc","feed":"asc","type":"asc"},
+          "pick_feed_order": ["Pick Conveyor"],
+          "pick_type_order": ["Cherry","Grape"],
+          "place_item_order": {"x_pos":"desc","y_pos":"desc","z_pos":"desc","batch":"asc"},
+          "place_feed_order": ["Place Conveyor"],
+          "place_type_order": ["Cherry","Grape"]
+        }
+      },
+      "robot_motion": {
+        "Robot 01": {
+          "Pick Conveyor": {
+            "Cherry": {"approach_pos":[0,0,150],"approach_vel":3000,"approach_prec":"Regular","proc_pos":[0,0,50],"proc_vel":3000,"proc_prec":"Position Level","proc_level":1,"escape_pos":[0,0,150],"escape_vel":3000,"escape_prec":"Regular","duration":0.8,"advance":0.2},
+            "Grape": {"approach_pos":[0,0,150],"approach_vel":3000,"approach_prec":"Regular","proc_pos":[0,0,40],"proc_vel":3000,"proc_prec":"Position Level","proc_level":1,"escape_pos":[0,0,150],"escape_vel":3000,"escape_prec":"Regular","duration":1.0,"advance":0.25}
+          },
+          "Place Conveyor": {
+            "Cherry": {"approach_pos":[0,0,150],"approach_vel":3000,"approach_prec":"Regular","proc_pos":[0,0,50],"proc_vel":3000,"proc_prec":"Position Level","proc_level":1,"escape_pos":[0,0,150],"escape_vel":3000,"escape_prec":"Regular","duration":0.8,"advance":0.2},
+            "Grape": {"approach_pos":[0,0,150],"approach_vel":3000,"approach_prec":"Regular","proc_pos":[0,0,40],"proc_vel":3000,"proc_prec":"Position Level","proc_level":1,"escape_pos":[0,0,150],"escape_vel":3000,"escape_prec":"Regular","duration":1.0,"advance":0.25}
+          }
+        },
+        "Robot 02": {
+          "Pick Conveyor": {
+            "Cherry": {"approach_pos":[0,0,150],"approach_vel":3000,"approach_prec":"Regular","proc_pos":[0,0,50],"proc_vel":3000,"proc_prec":"Position Level","proc_level":1,"escape_pos":[0,0,150],"escape_vel":3000,"escape_prec":"Regular","duration":0.8,"advance":0.2},
+            "Grape": {"approach_pos":[0,0,150],"approach_vel":3000,"approach_prec":"Regular","proc_pos":[0,0,40],"proc_vel":3000,"proc_prec":"Position Level","proc_level":1,"escape_pos":[0,0,150],"escape_vel":3000,"escape_prec":"Regular","duration":1.0,"advance":0.25}
+          },
+          "Place Conveyor": {
+            "Cherry": {"approach_pos":[0,0,150],"approach_vel":3000,"approach_prec":"Regular","proc_pos":[0,0,50],"proc_vel":3000,"proc_prec":"Position Level","proc_level":1,"escape_pos":[0,0,150],"escape_vel":3000,"escape_prec":"Regular","duration":0.8,"advance":0.2},
+            "Grape": {"approach_pos":[0,0,150],"approach_vel":3000,"approach_prec":"Regular","proc_pos":[0,0,40],"proc_vel":3000,"proc_prec":"Position Level","proc_level":1,"escape_pos":[0,0,150],"escape_vel":3000,"escape_prec":"Regular","duration":1.0,"advance":0.25}
+          }
+        }
+      }
+    },
+    {
+      "id": 2, "name": "Mixed Layers",
+      "multi_pick": {"enabled": false, "mode": "Async"},
+      "multi_place": {"enabled": false, "mode": "Async"},
+      "grip_rules": [], "work_areas": {}, "load_share": [],
+      "pick_patterns": [], "place_patterns": [],
+      "item_sources": {}, "item_order": {}, "robot_motion": {}
+    }
+  ],
+  "layout": {
+    "elements": [
+      {"type":"conveyor","id":"conv_pick","name":"Pick Conveyor","feed_id":1,"x":310,"y":200,"width":420,"height":44},
+      {"type":"conveyor","id":"conv_place","name":"Place Conveyor","feed_id":2,"x":310,"y":390,"width":420,"height":44},
+      {"type":"robot","id":"robot_01","name":"Robot 01","robot_id":1,"x":430,"y":310},
+      {"type":"robot","id":"robot_02","name":"Robot 02","robot_id":2,"x":630,"y":310},
+      {"type":"camera","id":"cam_01","name":"Camera","supply_id":1,"x":262,"y":208},
+      {"type":"pattern_host","id":"ph_01","name":"Pattern Host","supply_id":2,"x":752,"y":398}
+    ]
+  }
+}
